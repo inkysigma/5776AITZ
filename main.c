@@ -1,6 +1,6 @@
 #pragma config(Motor,  port2,           LeftDrive,       tmotorVex393HighSpeed_MC29, openLoop)
 #pragma config(Motor,  port3,           RightDrive,       tmotorVex393HighSpeed_MC29, openLoop)
-#pragma config(Motor,  port4,           BottomLift,       tmotorVex393_MC29, openLoop, reversed)
+#pragma config(Motor,  port4,           BottomLift,       tmotorVex393_MC29, openLoop)
 #pragma config(Motor,  port5,           TopLift,         tmotorVex393HighSpeed_MC29, openLoop)
 #pragma config(Motor,  port6,           LeftMobileGoal,         tmotorVex393TurboSpeed_MC29, openLoop)
 #pragma config(Motor,  port7,           RightMobileGoal,       tmotorVex393HighSpeed_MC29, openLoop)
@@ -30,20 +30,36 @@ task usercontrol() {
 		moveDrive(vexRT[Ch3], vexRT[Ch2]);
 
 		// lift code
-		if (vexRT[Btn6U]) {
+		if (vexRT[Btn5U]) {
 			moveLift(127);
-			} else if (vexRT[Btn6D]) {
+			} else if (vexRT[Btn5D]) {
 			moveLift(-127);
 			} else {
 			moveLift(0);
 		}
 
-		if (vexRT[Btn5U]) {
+		if (vexRT[Btn6U]) {
 			openClaw(127);
-			} else if (vexRT[Btn5D]) {
+			} else if (vexRT[Btn6D]) {
 			closeClaw(127);
 			} else {
 			stopClaw();
+		}
+
+		if (vexRT[Btn8L]) {
+			moveGoal(127);
+			} else if (vexRT[Btn8R]) {
+			moveGoal(-127);
+			} else {
+			moveGoal(0);
+		}
+
+		if (vexRT[Btn7U]) {
+			moveSwitchLift(127);
+			} else if (vexRT[Btn7D]) {
+			moveSwitchLift(-127);
+			} else {
+			moveSwitchLift(0);
 		}
 	}
 }

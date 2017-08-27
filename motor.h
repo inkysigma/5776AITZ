@@ -6,7 +6,7 @@ void moveDrive (int left, int right) {
 }
 
 void moveLift (int power) {
-	motor[TopLift] = power;
+	motor[TopLift] = -power;
 	motor[BottomLift] = power;
 }
 
@@ -25,5 +25,9 @@ void stopClaw() {
 void moveGoal(int power) {
 	motor[LeftMobileGoal] = power;
 	motor[RightMobileGoal] = -power;
+}
+
+void moveSwitchLift(int power) {
+	motor[SwitchLift] = power;
 }
 #endif
