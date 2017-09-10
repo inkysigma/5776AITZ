@@ -41,10 +41,11 @@ void moveTop4bar(int power) {
 void claw_move(int power) {
 	motor[claw] = power;
 }
-// Allows user to control the robot when they hold the button 6D
+// Allows user to control the robot
+// PID should be active when button values are equal to 0
 task user_control() {
 	while(true) {
-            if (vexRT[Btn6D]) {
+		
                 motor[right] = vexRT[Ch2];
                 motor[left] = vexRT[Ch3];
 
