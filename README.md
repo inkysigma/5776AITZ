@@ -1,3 +1,3 @@
 # 5776C
 
-This is the code ffor the robot.
+This is the code for the robot.
