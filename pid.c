@@ -1,14 +1,8 @@
 #pragma config(Sensor, in2,    LiftPot,        sensorPotentiometer)
-
-#define Kp 1
-#define Kd 0
-#define Ki 0.001
-#define dt 0.01
-
 #include "motor.h"
 
 int target = 0;
-int isRunning = 0;
+bool isRunning = false;
 
 typedef struct {
 	float kp;
@@ -18,19 +12,21 @@ typedef struct {
 } pid;
 
 pid liftConfig;
+int leftTarget = 0;
+int rightTarget = 0;
 
 
 // holdLift holds the lift at a specific position using a PID loop.
-task holdLift() {
-	int INT_MAX = liftConfig.kp * 30;
-	int INT_MIN = liftConfig.kp * 20;
+task holdLeftLift() {
+	int INT_MAX = 127;
+	int INT_MIN = -127;
 	int integral = 0;
 	int proportional = 0;
 	int total = 0;
-	while (!isRunning) {
-		int error = SensorValue[LiftPot] - target;
+	while (isRunning) {
+		int error = SensorValue[LeftLiftPot] - leftTarget;
 		proportional = liftConfig.kp * error;
-		integral += liftConfig.ki * error;
+		integral += liftConfig.ki * error * liftConfig.dt;
 		if (integral > INT_MAX) {
 			integral = INT_MAX;
 		}
@@ -38,23 +34,46 @@ task holdLift() {
 			integral = INT_MIN;
 		}
 		total = proportional + integral;
-		moveLift(total);
+		moveLeftLift(total);
 		wait1Msec(liftConfig.dt);
 	}
 }
 
-void startPid(int t, pid config) {
-	target = t;
-	isRunning = 1;
-	liftConfig = config;
-	startTask(holdLift);
+task holdRightLift() {
+	int INT_MAX = 127;
+	int INT_MIN = -127;
+	int integral = 0;
+	int proportional = 0;
+	int total = 0;
+	while (isRunning) {
+		int error = SensorValue[LeftLiftPot] - rightTarget;
+		integral += liftConfig.ki * error * liftConfig.dt;
+		if (integral > INT_MAX) {
+			integral = INT_MAX;
+		}
+		else if (integral < INT_MIN) {
+			integral = INT_MIN;
+		}
+		total = proportional + integral;
+		moveRightLift(total);
+		wait1Msec(liftConfig.dt);
+	}
+}
+
+void startPid(int tl, int tr, pid config) {
+	leftTarget = tl;
+	rightTarget = tr;
+	isRunning = true;
+	liftConfig.kp = config.kp;
+	liftConfig.ki = config.ki;
+	liftConfig.kd = config.kd;
+	liftConfig.dt = config.dt;
+	startTask(holdLeftLift);
+	startTask(holdRightLift);
 }
 
 void stopPid() {
-	isRunning = 0;
-	stopTask(holdLift);
-}
-
-
-task main() {
+	isRunning = false;
+	stopTask(holdLeftLift);
+	stopTask(holdRightLift);
 }

@@ -1,14 +1,21 @@
-#ifndef MOTOR_H
-#define MOTOR_H
 void moveDrive (int left, int right) {
 	motor[LeftDrive] = left;
 	motor[RightDrive] = -right;
 }
 
-void moveLift (int power) {
-	motor[TopLift] = -power;
-	motor[BottomLift] = power;
+void moveLeftLift(int power) {
+	motor[LeftLift] = -power;
 }
+
+void moveRightLift(int power) {
+	motor[RightLift] = power;
+}
+
+void moveLift (int power) {
+	moveLeftLift(power);
+	moveRightLIft(power);
+}
+
 
 void openClaw(int power) {
 	motor[Claw] = power;
@@ -30,4 +37,3 @@ void moveGoal(int power) {
 void moveSwitchLift(int power) {
 	motor[SwitchLift] = power;
 }
-#endif
