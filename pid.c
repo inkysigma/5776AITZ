@@ -15,12 +15,12 @@
 // 10 ticks per degree
 // void drive drives the robot a specific distance
 void drive(int distance, int power, int waitTime) {
-    int timer = 0;
-	while (sensorValue[encLeft] < distance && timer < waitTime) {
-        motor[left] = power;
-        motor[right] = power;
-        wait1MS(20);
-        timer += 20;
+	int timer = 0;
+	while (SensorValue[encLeft] < distance && timer < waitTime) {
+		motor[left] = power;
+		motor[right] = power;
+		wait1Msec(20);
+		timer += 20;
 	}
 }
 
@@ -45,70 +45,68 @@ void claw_move(int power) {
 // PID should be active when button values are equal to 0
 task user_control() {
 	while(true) {
-		
-                motor[right] = vexRT[Ch2];
-                motor[left] = vexRT[Ch3];
+
+		motor[right] = vexRT[Ch2];
+		motor[left] = vexRT[Ch3];
 
 
-                if(vexRT[Btn6U] == 1) {
-                    moveLift(127);
-                } else if (vexRT[Btn6D]) {
-                    moveLift(-127);
-                }
-
-
-                if(vexRT[Btn5U] == 1) {
-                  moveMogo(127);
-                } else if (vexRT[Btn5D]) {
-                    moveMogo(-127);
-                }
-
-                if(vexRT[Btn8U] == 1) {
-                  moveTop4bar(127);
-                } else if (vexRT[Btn8D]) {
-                    moveTop4bar(-127);
-                }
-
-                if(vexRT[Btn8L] == 1) {
-                  claw_move(127);
-                } else if (vexRT[Btn8R]) {
-                    claw_move(-127);
-                }
-            }
+		if(vexRT[Btn6U] == 1) {
+			moveLift(127);
+			} else if (vexRT[Btn6D]) {
+			moveLift(-127);
 		}
+
+		if(vexRT[Btn5U] == 1) {
+			moveMogo(127);
+			} else if (vexRT[Btn5D]) {
+			moveMogo(-127);
+		}
+
+		if(vexRT[Btn8U] == 1) {
+			moveTop4bar(127);
+			} else if (vexRT[Btn8D]) {
+			moveTop4bar(-127);
+		}
+
+		if(vexRT[Btn8L] == 1) {
+			claw_move(127);
+			} else if (vexRT[Btn8R]) {
+			claw_move(-127);
+		}
+	}
 }
 
 // holdLift holds the lift at a specific position using a PID loop.
 task holdLift() {
-    writeDebugStreamLine("PID loop is running");
-    int SCALE_PROPORTIONAL = 0.05;
-    int SCALE_INTEGRAL = 0.005;
-    int INT_MAX = SCALE_PROPORTIONAL * 30;
-    int INT_MIN = SCALE_PROPORTIONAL * 20;
-    int integral = 0;
-    int proportional = 0;
-    int total = 0;
-    while (!vexRT[Btn6D]) {
-        writeDebugStreamLine("PID loop is in progress");
-        int error;
-        proportional = SCALE_PROPORTIONAL * error;
-        integral += SCALE_INTEGRAL * error;
-        if (integral > INT_MAX) {
-        integral = INT_MAX;
-        }
-        else if (integral < INT_MIN) {
-        integral = INT_MIN;
-        }
-        total = proportional + integral;
-        moveLift(total);
-        wait1Msec(20);
-    }
-    writeDebugStreamLine("PID Loop is stopping");
+	writeDebugStreamLine("PID loop is running");
+	int SCALE_PROPORTIONAL = 0.05;
+	int SCALE_INTEGRAL = 0.005;
+	int INT_MAX = SCALE_PROPORTIONAL * 30;
+	int INT_MIN = SCALE_PROPORTIONAL * 20;
+	int integral = 0;
+	int proportional = 0;
+	int total = 0;
+	while (!vexRT[Btn6D]) {
+		writeDebugStreamLine("PID loop is in progress");
+		int error;
+		proportional = SCALE_PROPORTIONAL * error;
+		integral += SCALE_INTEGRAL * error;
+		if (integral > INT_MAX) {
+			integral = INT_MAX;
+		}
+		else if (integral < INT_MIN) {
+			integral = INT_MIN;
+		}
+		total = proportional + integral;
+		moveLift(total);
+		wait1Msec(20);
+	}
+	writeDebugStreamLine("PID Loop is stopping");
 }
 
 task main() {
 	startTask(holdLift);
-    startTask(user_control);
+	startTask(user_control);
 	writeDebugStreamLine("main is running");
 	while (true) {
 		// stalls the program infinitely without using the CPU too much
