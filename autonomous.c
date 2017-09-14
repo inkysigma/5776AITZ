@@ -1,7 +1,7 @@
 #include "motor.h"
 
 void autonomous() {
- 	// TODO: Implement the actual methods and find the associated values
+	// TODO: Implement the actual methods and find the associated values
 	moveForward();
 	rotate();
 	pickUpCone();
