@@ -20,9 +20,8 @@ int rightTarget = 0;
 task holdLeftLift() {
 	int INT_MAX = 127;
 	int INT_MIN = -127;
-	int integral = 0;
+	float integral = 0;
 	int proportional = 0;
-	int total = 0;
 	while (isRunning) {
 		int error = SensorValue[LeftLiftPot] - leftTarget;
 		proportional = liftConfig.kp * error;
@@ -33,7 +32,7 @@ task holdLeftLift() {
 		else if (integral < INT_MIN) {
 			integral = INT_MIN;
 		}
-		total = proportional + integral;
+		float total = proportional + integral;
 		moveLeftLift(total);
 		wait1Msec(liftConfig.dt);
 	}
@@ -42,11 +41,10 @@ task holdLeftLift() {
 task holdRightLift() {
 	int INT_MAX = 127;
 	int INT_MIN = -127;
-	int integral = 0;
+	float integral = 0;
 	int proportional = 0;
-	int total = 0;
 	while (isRunning) {
-		int error = SensorValue[LeftLiftPot] - rightTarget;
+		int error = SensorValue[RightLiftPot] - rightTarget;
 		integral += liftConfig.ki * error * liftConfig.dt;
 		if (integral > INT_MAX) {
 			integral = INT_MAX;
@@ -54,13 +52,16 @@ task holdRightLift() {
 		else if (integral < INT_MIN) {
 			integral = INT_MIN;
 		}
-		total = proportional + integral;
+		float total = proportional + integral;
 		moveRightLift(total);
 		wait1Msec(liftConfig.dt);
 	}
 }
 
 void startPid(int tl, int tr, pid config) {
+	if (isRunning) {
+		return;
+	}
 	leftTarget = tl;
 	rightTarget = tr;
 	isRunning = true;

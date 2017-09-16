@@ -65,7 +65,7 @@ task usercontrol() {
 			moveSwitchLift(0);
 		}
 		pid config;
-		config.kp = 1;
+		config.kp = 0.4;
 		config.ki = 0.01;
 		config.kd = 0;
 		config.dt = 20;
