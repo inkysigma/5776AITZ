@@ -28,6 +28,18 @@ task autonomous() {
 }
 
 task usercontrol() {
+	datalogClear();
+	pid config;
+	config.kp = 0.3;
+	config.ki = 0;
+	config.kd = 0;
+	config.dt = 20;
+
+	pid rconfig;
+	config.kp = 0.3;
+	config.ki = 0;
+	config.kd = 0.00;
+	config.dt = 20;
 	while (true) {
 		// drive code
 		moveDrive(vexRT[Ch3], vexRT[Ch2]);
@@ -35,10 +47,14 @@ task usercontrol() {
 		// lift code
 		if (vexRT[Btn5U]) {
 			moveLift(127);
+			stopPid();
 			} else if (vexRT[Btn5D]) {
 			moveLift(-127);
+			stopPid();
 			} else {
-			moveLift(0);
+			if (!isRunning()) {
+				moveLift(0);
+			}
 		}
 
 		if (vexRT[Btn6U]) {
@@ -64,14 +80,9 @@ task usercontrol() {
 			} else {
 			moveSwitchLift(0);
 		}
-		pid config;
-		config.kp = 0.4;
-		config.ki = 0.01;
-		config.kd = 0;
-		config.dt = 20;
 		if (vexRT[Btn7L]) {
-			startPid(SensorValue[LeftLiftPot], SensorValue[RightLiftPot], config);
-		} else if (vexRT[Btn7R]) {
+			startPid(SensorValue[LeftLiftPot], config, rconfig);
+			} else if (vexRT[Btn7R]) {
 			stopPid();
 		}
 	}

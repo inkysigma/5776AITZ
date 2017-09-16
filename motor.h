@@ -12,8 +12,8 @@ void moveRightLift(int power) {
 }
 
 void moveLift (int power) {
-	moveLeftLift(power);
-	moveRightLIft(power);
+	motor[LeftLift] = -power;
+	motor[RightLift] = power;
 }
 
 
