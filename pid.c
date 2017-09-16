@@ -1,8 +1,7 @@
 #pragma config(Sensor, in2,    LiftPot,        sensorPotentiometer)
 #include "motor.h"
 
-int target = 0;
-bool isRunning = false;
+bool ir = false;
 
 typedef struct {
 	float kp;
@@ -11,7 +10,8 @@ typedef struct {
 	float dt;
 } pid;
 
-pid liftConfig;
+pid lliftConfig;
+pid rliftConfig;
 int leftTarget = 0;
 int rightTarget = 0;
 
@@ -23,10 +23,10 @@ task holdLeftLift() {
 	int integral = 0;
 	int proportional = 0;
 	int total = 0;
-	while (isRunning) {
-		int error = SensorValue[LeftLiftPot] - leftTarget;
-		proportional = liftConfig.kp * error;
-		integral += liftConfig.ki * error * liftConfig.dt;
+	while (ir) {
+		int error = leftTarget - SensorValue[LeftLiftPot];
+		proportional = lliftConfig.kp * error;
+		integral += lliftConfig.ki * error * lliftConfig.dt;
 		if (integral > INT_MAX) {
 			integral = INT_MAX;
 		}
@@ -35,7 +35,8 @@ task holdLeftLift() {
 		}
 		total = proportional + integral;
 		moveLeftLift(total);
-		wait1Msec(liftConfig.dt);
+		datalogAddValue(total, 2);
+		wait1Msec(lliftConfig.dt);
 	}
 }
 
@@ -45,9 +46,9 @@ task holdRightLift() {
 	int integral = 0;
 	int proportional = 0;
 	int total = 0;
-	while (isRunning) {
-		int error = SensorValue[LeftLiftPot] - rightTarget;
-		integral += liftConfig.ki * error * liftConfig.dt;
+	while (ir) {
+		int error = rightTarget - SensorValue[LeftLiftPot];
+		integral += rliftConfig.ki * error * rliftConfig.dt;
 		if (integral > INT_MAX) {
 			integral = INT_MAX;
 		}
@@ -56,24 +57,33 @@ task holdRightLift() {
 		}
 		total = proportional + integral;
 		moveRightLift(total);
-		wait1Msec(liftConfig.dt);
+		datalogAddValue(total, 1);
+		wait1Msec(rliftConfig.dt);
 	}
 }
 
-void startPid(int tl, int tr, pid config) {
+void startPid(int tl, int tr, pid config, pid rconfig) {
 	leftTarget = tl;
 	rightTarget = tr;
-	isRunning = true;
-	liftConfig.kp = config.kp;
-	liftConfig.ki = config.ki;
-	liftConfig.kd = config.kd;
-	liftConfig.dt = config.dt;
+	ir = true;
+	lliftConfig.kp = config.kp;
+	lliftConfig.ki = config.ki;
+	lliftConfig.kd = config.kd;
+	lliftConfig.dt = config.dt;
+	rliftConfig.kp = rconfig.kp;
+	rliftConfig.ki = rconfig.ki;
+	rliftConfig.kd = rconfig.kd;
+	rliftConfig.dt = rconfig.dt;
 	startTask(holdLeftLift);
 	startTask(holdRightLift);
 }
 
 void stopPid() {
-	isRunning = false;
+	ir = false;
 	stopTask(holdLeftLift);
 	stopTask(holdRightLift);
+}
+
+bool isRunning() {
+	return ir;
 }
