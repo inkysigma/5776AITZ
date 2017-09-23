@@ -1,4 +1,3 @@
-
 #pragma config(Sensor, in4,    LeftLiftPot,        sensorPotentiometer)
 #pragma config(Sensor, in3,	   RightLiftPot,			 sensorPotentiometer)
 #pragma config(Motor,  port2,           LeftDrive,     tmotorVex393HighSpeed_MC29, openLoop)
@@ -22,6 +21,12 @@
 
 void pre_auton() {
 	bStopTasksBetweenModes = true;
+
+	SensorType[in1] = sensorNone;
+	delay(1500);
+
+	SensorType[in1] = sensorGyro;
+	delay(1500);
 }
 
 task autonomous() {
