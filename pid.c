@@ -38,7 +38,7 @@ task holdLeftLift() {
 		total = proportional + integral;
 		moveLeftLift(-total);
 		datalogAddValue(total, 1);
-		datalogAddValue(error, 2)
+		datalogAddValue(error, 2);
 		wait1Msec(lliftConfig.dt);
 	}
 }

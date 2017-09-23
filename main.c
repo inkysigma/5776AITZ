@@ -1,3 +1,4 @@
+
 #pragma config(Sensor, in4,    LeftLiftPot,        sensorPotentiometer)
 #pragma config(Sensor, in3,	   RightLiftPot,			 sensorPotentiometer)
 #pragma config(Motor,  port2,           LeftDrive,     tmotorVex393HighSpeed_MC29, openLoop)
@@ -30,16 +31,12 @@ task autonomous() {
 task usercontrol() {
 	datalogClear();
 	pid config;
+	pid rconfig;
 	config.kp = 0.3;
 	config.ki = 0;
 	config.kd = 0;
 	config.dt = 20;
 
-	pid rconfig;
-	config.kp = 0.3;
-	config.ki = 0;
-	config.kd = 0.00;
-	config.dt = 20;
 	while (true) {
 		// drive code
 		moveDrive(vexRT[Ch3], vexRT[Ch2]);
