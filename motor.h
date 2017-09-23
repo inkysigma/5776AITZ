@@ -4,6 +4,11 @@ void moveDrive (int left, int right) {
 	motor[RightDrive] = -right;
 }
 
+void rotateDrive(int speed) {
+	motor[LeftDrive] = speed;
+	motor[RightDrive] = speed;
+}
+
 void moveLeftLift(int power) {
 	motor[LeftLift] = -power;
 }
@@ -37,13 +42,4 @@ void moveGoal(int power) {
 
 void moveSwitchLift(int power) {
 	motor[SwitchLift] = power;
-}
-
-void rotate(int degrees) {
-	int first_pause = degrees * 6;
-	int second_pause = degrees * 7.5;
-	int third_pause = degrees * 9;
-	int cur_degrees = SensorValue[cur_degrees];
-	while (cur_degrees < first_pause) {
-	}
 }

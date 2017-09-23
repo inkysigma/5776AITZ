@@ -1,9 +1,12 @@
-#pragma config(Sensor, in4,    LeftLiftPot,        sensorPotentiometer)
-#pragma config(Sensor, in3,	   RightLiftPot,			 sensorPotentiometer)
+#pragma config(Sensor, in1,    gyro,           sensorGyro)
+#pragma config(Sensor, in3,    RightLiftPot,   sensorPotentiometer)
+#pragma config(Sensor, in4,    LeftLiftPot,    sensorPotentiometer)
+#pragma config(Sensor, dgtl1,  RightEncoder,   sensorQuadEncoder)
+#pragma config(Sensor, dgtl3,  LeftEncoder,    sensorQuadEncoder)
 #pragma config(Motor,  port2,           LeftDrive,     tmotorVex393HighSpeed_MC29, openLoop)
 #pragma config(Motor,  port3,           RightDrive,    tmotorVex393HighSpeed_MC29, openLoop)
-#pragma config(Motor,  port4,           RightLift,    tmotorVex393_MC29, openLoop)
-#pragma config(Motor,  port5,           LeftLift,       tmotorVex393HighSpeed_MC29, openLoop)
+#pragma config(Motor,  port4,           RightLift,     tmotorVex393_MC29, openLoop)
+#pragma config(Motor,  port5,           LeftLift,      tmotorVex393HighSpeed_MC29, openLoop)
 #pragma config(Motor,  port6,           LeftMobileGoal, tmotorVex393TurboSpeed_MC29, openLoop)
 #pragma config(Motor,  port7,           RightMobileGoal, tmotorVex393HighSpeed_MC29, openLoop)
 #pragma config(Motor,  port8,           SwitchLift,    tmotorVex393HighSpeed_MC29, openLoop)
@@ -17,6 +20,7 @@
 
 #include "motor.h"
 #include "pid.c"
+#include "autonomous.c"
 #include "Vex_Competition_Includes.c"
 
 void pre_auton() {
@@ -30,7 +34,7 @@ void pre_auton() {
 }
 
 task autonomous() {
-
+	auto();
 }
 
 task usercontrol() {
