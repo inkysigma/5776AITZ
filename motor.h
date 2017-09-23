@@ -1,4 +1,3 @@
-
 void moveDrive (int left, int right) {
 	motor[LeftDrive] = left;
 	motor[RightDrive] = -right;
