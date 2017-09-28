@@ -36,7 +36,7 @@ void stopClaw() {
 }
 
 void moveGoal(int power) {
-	motor[LeftMobileGoal] = power;
+	motor[LeftMobileGoal] = power * 241/256;
 	motor[RightMobileGoal] = -power;
 }
 
