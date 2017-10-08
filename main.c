@@ -1,6 +1,8 @@
 #pragma config(Sensor, in1,    gyro,           sensorGyro)
 #pragma config(Sensor, in3,    RightLiftPot,   sensorPotentiometer)
 #pragma config(Sensor, in4,    LeftLiftPot,    sensorPotentiometer)
+#pragma config(Sensor, in7,    MogoRightPot,   sensorPotentiometer)
+#pragma config(Sensor, in8,    MogoLeftPot,    sensorPotentiometer)
 #pragma config(Sensor, dgtl1,  RightEncoder,   sensorQuadEncoder)
 #pragma config(Sensor, dgtl3,  LeftEncoder,    sensorQuadEncoder)
 #pragma config(Motor,  port2,           LeftDrive,     tmotorVex393HighSpeed_MC29, openLoop)
@@ -19,12 +21,14 @@
 #pragma competitionControl(Competition)
 
 #include "motor.h"
+#include "corrector.c"
 #include "pid.c"
 #include "autonomous.c"
 #include "Vex_Competition_Includes.c"
 
 void pre_auton() {
 	bStopTasksBetweenModes = true;
+
 
 	SensorType[in1] = sensorNone;
 	delay(1500);
@@ -72,9 +76,9 @@ task usercontrol() {
 		}
 
 		if (vexRT[Btn8L]) {
-			moveGoal(127);
+			moveGoal(100);
 			} else if (vexRT[Btn8R]) {
-			moveGoal(-127);
+			moveGoal(-100);
 			} else {
 			moveGoal(0);
 		}

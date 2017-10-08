@@ -1,3 +1,5 @@
+#include "corrector.c"
+
 void moveDrive (int left, int right) {
 	motor[LeftDrive] = left;
 	motor[RightDrive] = -right;
@@ -35,7 +37,8 @@ void stopClaw() {
 }
 
 void moveGoal(int power) {
-	motor[LeftMobileGoal] = power * 241/256;
+	int output = getMogoCorrection(power);
+	motor[LeftMobileGoal] = output;
 	motor[RightMobileGoal] = -power;
 }
 
