@@ -1,15 +1,12 @@
-#pragma config(Sensor, in2,    LiftPot,        sensorPotentiometer)
-#include "motor.h"
-
 bool ir = false;
 int target = 0;
 
-typedef struct {
+struct pid {
 	float kp;
 	float kd;
 	float ki;
 	float dt;
-} pid;
+};
 
 pid lliftConfig;
 pid rliftConfig;
