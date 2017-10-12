@@ -11,7 +11,7 @@ void rotateDrive(int speed) {
 }
 
 void moveLeftLift(int power) {
-	motor[LeftLift] = -power;
+	motor[LeftLift] = power;
 }
 
 void moveRightLift(int power) {
@@ -19,8 +19,12 @@ void moveRightLift(int power) {
 }
 
 void moveLift (int power) {
-	motor[LeftLift] = -power;
-	motor[RightLift] = power;
+	motor[LeftLift] = power;
+	motor[RightLift] = -power;
+}
+
+void moveRight(int power) {
+	motor[RightLift] = -power;
 }
 
 

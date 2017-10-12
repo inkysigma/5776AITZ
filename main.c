@@ -1,3 +1,4 @@
+#pragma config(I2C_Usage, I2C1, i2cSensors)
 #pragma config(Sensor, in1,    gyro,           sensorGyro)
 #pragma config(Sensor, in3,    RightLiftPot,   sensorPotentiometer)
 #pragma config(Sensor, in4,    LeftLiftPot,    sensorPotentiometer)
@@ -5,10 +6,16 @@
 #pragma config(Sensor, in8,    MogoLeftPot,    sensorPotentiometer)
 #pragma config(Sensor, dgtl1,  RightEncoder,   sensorQuadEncoder)
 #pragma config(Sensor, dgtl3,  LeftEncoder,    sensorQuadEncoder)
+#pragma config(Sensor, dgtl5,  RightLiftEnc,   sensorRotation)
+#pragma config(Sensor, dgtl6,  LeftLiftEnc,    sensorRotation)
+#pragma config(Sensor, dgtl7,  RightLiftButton, sensorDigitalIn)
+#pragma config(Sensor, dgtl8,  LeftLiftButton, sensorDigitalIn)
+#pragma config(Sensor, I2C_1,  ,               sensorQuadEncoderOnI2CPort,    , AutoAssign )
+#pragma config(Sensor, I2C_2,  ,               sensorQuadEncoderOnI2CPort,    , AutoAssign )
 #pragma config(Motor,  port2,           LeftDrive,     tmotorVex393HighSpeed_MC29, openLoop)
 #pragma config(Motor,  port3,           RightDrive,    tmotorVex393HighSpeed_MC29, openLoop)
-#pragma config(Motor,  port4,           RightLift,     tmotorVex393_MC29, openLoop)
-#pragma config(Motor,  port5,           LeftLift,      tmotorVex393HighSpeed_MC29, openLoop)
+#pragma config(Motor,  port4,           RightLift,     tmotorVex393HighSpeed_MC29, openLoop, encoderPort, I2C_1)
+#pragma config(Motor,  port5,           LeftLift,      tmotorVex393HighSpeed_MC29, openLoop, encoderPort, I2C_2)
 #pragma config(Motor,  port6,           LeftMobileGoal, tmotorVex393TurboSpeed_MC29, openLoop)
 #pragma config(Motor,  port7,           RightMobileGoal, tmotorVex393HighSpeed_MC29, openLoop)
 #pragma config(Motor,  port8,           SwitchLift,    tmotorVex393HighSpeed_MC29, openLoop)
@@ -45,10 +52,20 @@ task usercontrol() {
 	datalogClear();
 	pid config;
 	pid rconfig;
-	config.kp = 0.3;
+	config.kp = 10;
 	config.ki = 0;
 	config.kd = 0;
 	config.dt = 20;
+
+	rconfig.kp = 10;
+	rconfig.ki = 0;
+	rconfig.kd = 0;
+	rconfig.dt = 20;
+
+	setLeftConfig(config);
+	setRightConfig(rconfig);
+
+	startLeftLiftPid();
 
 	while (true) {
 		// drive code
@@ -56,14 +73,14 @@ task usercontrol() {
 
 		// lift code
 		if (vexRT[Btn5U]) {
-			moveLift(127);
 			stopPid();
+			moveRight(127);
 			} else if (vexRT[Btn5D]) {
-			moveLift(-127);
 			stopPid();
+			moveRight(-127);
 			} else {
 			if (!isRunning()) {
-				moveLift(0);
+				moveRight(0);
 			}
 		}
 
@@ -91,9 +108,16 @@ task usercontrol() {
 			moveSwitchLift(0);
 		}
 		if (vexRT[Btn7L]) {
-			startPid(SensorValue[LeftLiftPot], config, rconfig);
+			startPid(SensorValue[LeftLiftPot], rconfig);
 			} else if (vexRT[Btn7R]) {
 			stopPid();
+		}
+
+		if (SensorValue[LeftLiftButton]) {
+			SensorValue[LeftLift] = 0;
+		}
+		if (SensorValue[RightLiftButton]) {
+			SensorValue[RightLift] = 0;
 		}
 	}
 }

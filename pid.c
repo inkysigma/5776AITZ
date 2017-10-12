@@ -1,4 +1,3 @@
-#pragma config(Sensor, in2,    LiftPot,        sensorPotentiometer)
 #include "motor.h"
 
 bool ir = false;
@@ -14,33 +13,38 @@ typedef struct {
 pid lliftConfig;
 pid rliftConfig;
 
-int leftOffset = SensorValue[LeftLiftPot];
-int rightOffset = SensorValue[RightLiftPot];
+void setRightConfig(pid rConfig) {
+	rliftConfig.kp = rconfig.kp;
+	rliftConfig.ki = rconfig.ki;
+	rliftConfig.kd = rconfig.kd;
+	rliftConfig.dt = rconfig.dt;
+}
 
+void setLeftConfig(pid lconfig) {
+	lliftConfig.kp = lconfig.kp;
+	lliftConfig.ki = lconfig.ki;
+	lliftConfig.kd = lconfig.kd;
+	lliftConfig.dt = lconfig.dt;
+}
 
 // holdLift holds the lift at a specific position using a PID loop.
 task holdLeftLift() {
-	int INT_MAX = 127;
-	int INT_MIN = -127;
 	float integral = 0;
 	int proportional = 0;
 	int total = 0;
-	while (ir) {
-		int error = (target - leftOffset) - (SensorValue[LeftLiftPot] - leftOffset);
+	while (true) {
+		int error = SensorValue[LeftLiftPot] - SensorValue[RightLiftButton];
 		proportional = lliftConfig.kp * error;
-		integral += lliftConfig.ki * error * lliftConfig.dt;
-		if (integral > INT_MAX) {
-			integral = INT_MAX;
-		}
-		else if (integral < INT_MIN) {
-			integral = INT_MIN;
-		}
-		total = proportional + integral;
+		integral += lliftConfig.ki * total * lliftConfig.dt;
+		total = error + integral;
 		moveLeftLift(-total);
-		datalogAddValue(total, 1);
-		datalogAddValue(error, 2);
+
 		wait1Msec(lliftConfig.dt);
 	}
+}
+
+void startLeftLiftPid() {
+	startTask(holdLeftLift);
 }
 
 task holdRightLift() {
@@ -50,7 +54,7 @@ task holdRightLift() {
 	int proportional = 0;
 	int total = 0;
 	while (ir) {
-		int error = (target - leftOffset) - (SensorValue[RightLiftPot]- rightOffset);
+		int error = target - SensorValue[RightLiftPot];
 		integral += rliftConfig.ki * error * rliftConfig.dt;
 		if (integral > INT_MAX) {
 			integral = INT_MAX;
@@ -61,27 +65,16 @@ task holdRightLift() {
 		float total = proportional + integral;
 		moveRightLift(total);
 
-		datalogAddValue(total, 3);
-		datalogAddValue(error, 4);
 		wait1Msec(rliftConfig.dt);
 	}
 }
 
-void startPid(int t, pid config, pid rconfig) {
+void startRightPid(int t) {
 	if (ir) {
 		return;
 	}
-	target = t - leftOffset;
+	target = t;
 	ir = true;
-	lliftConfig.kp = config.kp;
-	lliftConfig.ki = config.ki;
-	lliftConfig.kd = config.kd;
-	lliftConfig.dt = config.dt;
-	rliftConfig.kp = rconfig.kp;
-	rliftConfig.ki = rconfig.ki;
-	rliftConfig.kd = rconfig.kd;
-	rliftConfig.dt = rconfig.dt;
-	startTask(holdLeftLift);
 	startTask(holdRightLift);
 }
 
