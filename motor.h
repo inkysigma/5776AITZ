@@ -5,7 +5,7 @@ const FAST_SPEED = 100;
 const SLOW_ANGLE = 45;
 const SLOW_SPEED = 50
 const SYNC_SPEED = 15;
-void moveDrive (int left, int right) {
+void moveDrive(int left, int right) {
 	motor[LeftDrive] = left;
 	motor[RightDrive] = -right;
 }
