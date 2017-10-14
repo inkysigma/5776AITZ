@@ -1,12 +1,17 @@
 #include "motor.h"
 
-bool ir = false;
+bool lir = false;
+bool rir = false;
 int target = 0;
 
 struct pid {
 	float kp;
 	float kd;
 	float ki;
+	float min_int;
+	float max_int;
+	float min_t;
+	float max_t;
 	float dt;
 };
 
@@ -18,6 +23,10 @@ void setRightConfig(pid rconfig) {
 	rliftConfig.ki = rconfig.ki;
 	rliftConfig.kd = rconfig.kd;
 	rliftConfig.dt = rconfig.dt;
+	rliftConfig.min_int = rconfig.min_int;
+	rliftConfig.max_int = rconfig.max_int;
+	rliftConfig.min_t = rconfig.min_t;
+	rliftConfig.max_t = rconfig.max_t;
 }
 
 void setLeftConfig(pid lconfig) {
@@ -25,10 +34,20 @@ void setLeftConfig(pid lconfig) {
 	lliftConfig.ki = lconfig.ki;
 	lliftConfig.kd = lconfig.kd;
 	lliftConfig.dt = lconfig.dt;
+	lliftConfig.min_int = lconfig.min_int;
+	lliftConfig.max_int = lconfig.max_int;
+	lliftConfig.min_t = lconfig.min_t;
+	lliftConfig.max_t = lconfig.max_t;
 }
 
-int rightLiftInit = SensorValue[RightLiftPot];
-int leftLiftInit = SensorValue[LeftLiftPot];
+
+int rightLiftInit = 0;
+int leftLiftInit = 0;
+
+void setInitialValues(int rinit, int linit) {
+	rightLiftInit = rinit;
+	leftLiftInit = linit;
+}
 
 int getRightPot() {
 	return SensorValue[RightLiftPot] - rightLiftInit;
@@ -38,16 +57,28 @@ int getLeftPot() {
 	return SensorValue[LeftLiftPot] - leftLiftInit;
 }
 
-// holdLift holds the lift at a specific position using a PID loop.
+// holdLift holds the lift at a specific position using a PID loop. This should target the right side
 task holdLeftLift() {
 	float integral = 0;
-	int proportional = 0;
-	int total = 0;
-	while (true) {
+	float total = 0;
+	while (lir) {
 		int error = getRightPot() - getLeftPot();
-		proportional = lliftConfig.kp * error;
-		integral += total * lliftConfig.dt/1000;
-		total = proportional + lliftConfig.ki * integral;
+		integral += error * lliftConfig.dt/1000;
+
+		if (integral > lliftConfig.max_int) {
+			integral = lliftConfig.max_int;
+			} else if (integral < lliftConfig.min_int) {
+			integral = lliftConfig.min_int;
+		}
+
+		total = lliftConfig.kp * error + lliftConfig.ki * integral;
+
+		if (total > rliftConfig.max_t) {
+			total = rliftConfig.max_t;
+			} else if (total < rliftConfig.min_t) {
+			total = rliftConfig.min_t;
+		}
+
 		moveLeftLift(total);
 
 		wait1Msec(lliftConfig.dt);
@@ -55,26 +86,28 @@ task holdLeftLift() {
 	}
 }
 
-void startLeftLiftPid() {
-	startTask(holdLeftLift);
-}
-
+// holdRightLift should target some given target. Once the user moves up or down, this task should stop. Once movement stops,
+// this ought to start running
 task holdRightLift() {
-	int INT_MAX = 127;
-	int INT_MIN = -127;
 	float integral = 0;
 	int proportional = 0;
 	int total = 0;
-	while (ir) {
+	while (rir) {
 		int error = target - getRightPot();
 		integral += error * rliftConfig.dt/1000;
-		if (integral > INT_MAX) {
-			integral = INT_MAX;
+
+		if (integral > rliftConfig.max_int) {
+			integral = rliftConfig.max_int;
 		}
-		else if (integral < INT_MIN) {
-			integral = INT_MIN;
+		else if (integral < rliftConfig.min_int) {
+			integral = rliftConfig.min_int;
 		}
 		float total = rliftConfig.kp * error + rliftConfig.ki * integral;
+		if (total > rliftConfig.max_t) {
+			total = rliftConfig.max_t;
+			} else if (total < rliftConfig.min_t) {
+			total = rliftConfig.min_t;
+		}
 		moveRightLift(total);
 		datalogAddValue(1, total);
 		wait1Msec(rliftConfig.dt);
@@ -82,22 +115,22 @@ task holdRightLift() {
 }
 
 void startRightPid(int t) {
-	if (ir) {
-		return;
-	}
 	target = t;
-	ir = true;
+	rir = true;
 	startTask(holdRightLift);
 }
 
+void startLeftPid() {
+	lir = true;
+	startTask(holdLeftLift);
+}
+
 void stopRightPid() {
-	if (!ir) {
-		return;
-	}
-	ir = false;
+	rir = false;
 	stopTask(holdRightLift);
 }
 
-bool isRunning() {
-	return ir;
+void stopLeftPid() {
+	lir = false;
+	stopTask(holdLeftLift);
 }
