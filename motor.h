@@ -45,8 +45,19 @@ void stopClaw() {
 	openClaw(0);
 }
 
-void openClawFully();
-void closeClawFully();
+void openClawFully() {
+
+}
+void closeClawFully() {
+
+}
+void moveClawForward() {
+
+}
+void moveLiftTo(int target) {
+
+}
+
 void moveLeftMogo(int power) {
 	int output = getMogoCorrection(power);
 	motor[LeftMobileGoal] = output;
