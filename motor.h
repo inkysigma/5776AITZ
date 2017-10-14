@@ -35,6 +35,9 @@ void stopClaw() {
 	openClaw(0);
 }
 
+void openClawFully();
+void closeClawFully();
+
 void moveGoal(int power) {
 	motor[LeftMobileGoal] = power * 241/256;
 	motor[RightMobileGoal] = -power;
@@ -42,4 +45,9 @@ void moveGoal(int power) {
 
 void moveSwitchLift(int power) {
 	motor[SwitchLift] = power;
+}
+
+void switch_mogo() {
+	moveMobileGoal(80);
+	while (SensorValue[
 }
