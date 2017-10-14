@@ -62,6 +62,12 @@ void setDrive(int ticks) {
 	moveDrive(0, 0);
 }
 
+void pickUpMobileGoal() {
+}
+
+void putDownMobileGoal() {
+}
+
 
 void auto() {
 	// TODO: Implement the actual methods and find the associated values

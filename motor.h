@@ -1,3 +1,4 @@
+#include "corrector.c"
 
 void moveDrive (int left, int right) {
 	motor[LeftDrive] = left;
@@ -10,16 +11,20 @@ void rotateDrive(int speed) {
 }
 
 void moveLeftLift(int power) {
-	motor[LeftLift] = -power;
+	motor[LeftLift] = power;
 }
 
 void moveRightLift(int power) {
-	motor[RightLift] = power;
+	motor[RightLift] = -power;
 }
 
 void moveLift (int power) {
-	motor[LeftLift] = -power;
-	motor[RightLift] = power;
+	motor[LeftLift] = power;
+	motor[RightLift] = -power;
+}
+
+void moveRight(int power) {
+	motor[RightLift] = -power;
 }
 
 
@@ -39,7 +44,8 @@ void openClawFully();
 void closeClawFully();
 
 void moveGoal(int power) {
-	motor[LeftMobileGoal] = power * 241/256;
+	int output = getMogoCorrection(power);
+	motor[LeftMobileGoal] = output;
 	motor[RightMobileGoal] = -power;
 }
 

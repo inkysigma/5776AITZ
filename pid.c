@@ -1,3 +1,5 @@
+#include "motor.h"
+
 bool ir = false;
 int target = 0;
 
@@ -11,33 +13,50 @@ struct pid {
 pid lliftConfig;
 pid rliftConfig;
 
-int leftOffset = SensorValue[LeftLiftPot];
-int rightOffset = SensorValue[RightLiftPot];
+void setRightConfig(pid rconfig) {
+	rliftConfig.kp = rconfig.kp;
+	rliftConfig.ki = rconfig.ki;
+	rliftConfig.kd = rconfig.kd;
+	rliftConfig.dt = rconfig.dt;
+}
 
+void setLeftConfig(pid lconfig) {
+	lliftConfig.kp = lconfig.kp;
+	lliftConfig.ki = lconfig.ki;
+	lliftConfig.kd = lconfig.kd;
+	lliftConfig.dt = lconfig.dt;
+}
+
+int rightLiftInit = SensorValue[RightLiftPot];
+int leftLiftInit = SensorValue[LeftLiftPot];
+
+int getRightPot() {
+	return SensorValue[RightLiftPot] - rightLiftInit;
+}
+
+int getLeftPot() {
+	return SensorValue[LeftLiftPot] - leftLiftInit;
+}
 
 // holdLift holds the lift at a specific position using a PID loop.
 task holdLeftLift() {
-	int INT_MAX = 127;
-	int INT_MIN = -127;
 	float integral = 0;
 	int proportional = 0;
 	int total = 0;
-	while (ir) {
-		int error = (target - leftOffset) - (SensorValue[LeftLiftPot] - leftOffset);
+	while (true) {
+		int error = getRightPot() - getLeftPot();
 		proportional = lliftConfig.kp * error;
-		integral += lliftConfig.ki * error * lliftConfig.dt;
-		if (integral > INT_MAX) {
-			integral = INT_MAX;
-		}
-		else if (integral < INT_MIN) {
-			integral = INT_MIN;
-		}
-		total = proportional + integral;
-		moveLeftLift(-total);
-		datalogAddValue(total, 1);
-		datalogAddValue(error, 2);
+		integral += total * lliftConfig.dt/1000;
+		total = proportional + lliftConfig.ki * integral;
+		moveLeftLift(total);
+
 		wait1Msec(lliftConfig.dt);
+		datalogAddValue(0, total);
 	}
+}
+
+void startLeftLiftPid() {
+	startTask(holdLeftLift);
 }
 
 task holdRightLift() {
@@ -47,44 +66,35 @@ task holdRightLift() {
 	int proportional = 0;
 	int total = 0;
 	while (ir) {
-		int error = (target - leftOffset) - (SensorValue[RightLiftPot]- rightOffset);
-		integral += rliftConfig.ki * error * rliftConfig.dt;
+		int error = target - getRightPot();
+		integral += error * rliftConfig.dt/1000;
 		if (integral > INT_MAX) {
 			integral = INT_MAX;
 		}
 		else if (integral < INT_MIN) {
 			integral = INT_MIN;
 		}
-		float total = proportional + integral;
+		float total = rliftConfig.kp * error + rliftConfig.ki * integral;
 		moveRightLift(total);
-
-		datalogAddValue(total, 3);
-		datalogAddValue(error, 4);
+		datalogAddValue(1, total);
 		wait1Msec(rliftConfig.dt);
 	}
 }
 
-void startPid(int t, pid config, pid rconfig) {
+void startRightPid(int t) {
 	if (ir) {
 		return;
 	}
-	target = t - leftOffset;
+	target = t;
 	ir = true;
-	lliftConfig.kp = config.kp;
-	lliftConfig.ki = config.ki;
-	lliftConfig.kd = config.kd;
-	lliftConfig.dt = config.dt;
-	rliftConfig.kp = rconfig.kp;
-	rliftConfig.ki = rconfig.ki;
-	rliftConfig.kd = rconfig.kd;
-	rliftConfig.dt = rconfig.dt;
-	startTask(holdLeftLift);
 	startTask(holdRightLift);
 }
 
-void stopPid() {
+void stopRightPid() {
+	if (!ir) {
+		return;
+	}
 	ir = false;
-	stopTask(holdLeftLift);
 	stopTask(holdRightLift);
 }
 
