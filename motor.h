@@ -82,10 +82,6 @@ void switchClaw() {
 	prevOutwardState = -prevOutwardState;
 }
 
-void moveLiftTo(int target) {
-
-}
-
 void moveLeftMogo(int power) {
 	int output = getMogoCorrection(power);
 	motor[LeftMobileGoal] = output;

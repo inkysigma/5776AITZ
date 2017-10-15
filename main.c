@@ -101,9 +101,11 @@ task usercontrol() {
 
 		if (vexRT[Btn7U]) {
 			moveSwitchLift(127);
-			} else if (vexRT[Btn7D]) {
+		}
+		else if (vexRT[Btn7D]) {
 			moveSwitchLift(-127);
-			} else {
+		}
+		else {
 			moveSwitchLift(0);
 		}
 
