@@ -1,20 +1,18 @@
 #include "pragmas.h"
 
-const int slope;
-const int y_intercept;
-const int forward_angle; // angle for vertical fourbar
-const int backward_angle;
-const int bottom;
+const int SLOPE;
+const int Y_INTERCEPT;
+const int BOTTOM;
 
 void buildStack(int level) {
 	openClawFully();
-	moveClawForward(forward_angle);
+	switchClaw();
 	closeClawFully();
-	moveLiftTo(level * slope + y_intercept);
+	moveLiftTo(level * SLOPE + Y_INTERCEPT);
     moveClawBackward(backward_angle);
 	openClawFully();
-	moveClawForward(forward_angle);
-	moveLiftTo(bottom);
+	switchClaw();
+	moveLiftTo(BOTTOM);
 }
 
 void build_up(int *level) {
