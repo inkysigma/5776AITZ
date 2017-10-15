@@ -21,6 +21,6 @@ task main()
 		else {
 			applyStall();
 		}
-		delay(20);s
+		delay(20);
 	}
 }

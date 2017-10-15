@@ -2,14 +2,14 @@
 
 const int SLOPE = 25;
 const int Y_INTERCEPT= 1;
-const int BOTTOM;
+const int BOTTOM = SensorValue[LeftLiftPot];
 
 void buildStack(int level) {
 	openClawFully();
 	switchClaw();
 	closeClawFully();
 	moveLiftTo(level * SLOPE + Y_INTERCEPT);
-    moveClawBackward(backward_angle);
+  moveClawBackward(backward_angle);
 	openClawFully();
 	switchClaw();
 	moveLiftTo(BOTTOM);

@@ -40,23 +40,6 @@ void setLeftConfig(pid lconfig) {
 	lliftConfig.max_t = lconfig.max_t;
 }
 
-
-int rightLiftInit = 0;
-int leftLiftInit = 0;
-
-void setInitialValues(int rinit, int linit) {
-	rightLiftInit = rinit;
-	leftLiftInit = linit;
-}
-
-int getRightPot() {
-	return SensorValue[RightLiftPot] - rightLiftInit;
-}
-
-int getLeftPot() {
-	return SensorValue[LeftLiftPot] - leftLiftInit;
-}
-
 // holdLift holds the lift at a specific position using a PID loop. This should target the right side
 task holdLeftLift() {
 	float integral = 0;

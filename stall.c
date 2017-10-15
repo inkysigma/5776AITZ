@@ -1,5 +1,6 @@
 #include "motor.h"
 
 void applyStall() {
-	moveLift(30);
+	moveRightLift(30);
+	moveLeftLift(30);
 }

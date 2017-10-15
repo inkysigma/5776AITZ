@@ -1,14 +1,16 @@
 #include "corrector.c"
+#include "sensors.h"
 
-const OUT_ANGLE = 90;
-const IN_ANGLE = 0;
-const FAST_SPEED = 100;
-const SLOW_ANGLE = 45;
-const SLOW_SPEED = 50
-const SYNC_SPEED = 15;
+const int OUT_ANGLE = 90;
+const int IN_ANGLE = 0;
+const int FAST_SPEED = 100;
+const int SLOW_ANGLE = 45;
+const int SLOW_SPEED = 50;
+const int SYNC_SPEED = 15;
 
 #define CLAW_TIME 2000
 #define SWITCH_TIME 2000
+#define LEVEL_CHANGE 30
 
 void moveSwitchLift(int power);
 
@@ -49,21 +51,21 @@ void stopClaw() {
 }
 
 void openClawFully() {
-	int delay = 0;
+	int d = 0;
 	openClaw(40);
-	while (delay < CLAW_TIME) {
+	while (d < CLAW_TIME) {
 		delay(20);
-		delay += 20;
+		d += 20;
 	}
 }
 
 void closeClawFully() {
 	// using timing for now
-	int delay = 0;
+	int d = 0;
 	openClaw(-40);
-	while (delay < CLAW_TIME) {
+	while (d < CLAW_TIME) {
 		wait1MSec(20);
-		delay += 20;
+		d += 20;
 	}
 }
 
@@ -81,6 +83,7 @@ void switchClaw() {
 }
 
 void moveLiftTo(int target) {
+
 }
 
 void moveLeftMogo(int power) {
