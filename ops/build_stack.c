@@ -1,4 +1,3 @@
-#include "pragmas.h"
 #include "ops/motor_ops.h"
 
 const int SLOPE = 25;
@@ -6,12 +5,14 @@ const int Y_INTERCEPT= 1;
 const int BOTTOM = SensorValue[LeftLiftPot];
 
 void buildStack(int start_level) {
+	// start with claw at top and get cone and return
+
 	openClawFully();
 	switchClaw();
 	closeClawFully();
 
 	moveLiftTo(2, false);
-  switchClaw();
+  	switchClaw();
 
 	openClawFully();
 	switchClaw();
