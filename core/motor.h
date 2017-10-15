@@ -115,6 +115,7 @@ void syncMogo() {
 	}
 }
 
+
 void moveMogoOut() {
 	while (SensorValue[MogoRightPot] < SLOW_ANGLE) {
 		motor[RightMobileGoal] = SLOW_SPEED;
@@ -132,3 +133,9 @@ void moveMogoIn() {
 	moveRightMogo(0);
 	moveLeftMogo(0);
 }
+
+void applyStall() {
+	moveRightLift(10);
+	moveLeftLift(10);
+}
+

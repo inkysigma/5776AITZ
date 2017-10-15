@@ -1,6 +1,5 @@
-#include "motor.h"
-#include "sensors.h"
-#include "stall.c"
+#include "core/motor.h"
+#include "core/sensors.h"
 
 #define CONE_POT_HEIGHT 8
 #define CONE_POT_CONST 2

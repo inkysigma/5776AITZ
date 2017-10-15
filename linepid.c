@@ -1,5 +1,5 @@
-#include "pid.c"
-#include "motor.h"
+#include "ops/pid.c"
+#include "core/motor.h"
 
 void linePid(int target, pid config, int err) {
 	int INT_MAX = liftConfig.kp * 30;

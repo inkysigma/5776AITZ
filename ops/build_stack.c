@@ -1,5 +1,5 @@
 #include "pragmas.h"
-#include "motor_ops.h"
+#include "ops/motor_ops.h"
 
 const int SLOPE = 25;
 const int Y_INTERCEPT= 1;

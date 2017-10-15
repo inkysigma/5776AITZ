@@ -21,9 +21,9 @@
 // Select Download method as "competition"
 #pragma competitionControl(Competition)
 
-#include "motor.h"
-#include "sensors.h"
-#include "pid.c"
+#include "core/motor.h"
+#include "core/sensors.h"
+#include "ops/pid.c"
 
 //#include "autonomous.c"
 #include "Vex_Competition_Includes.c"

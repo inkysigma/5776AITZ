@@ -1,4 +1,4 @@
-#include "motor.h"
+#include "core/motor.h"
 
 void drive(int distance, int power, int waitTime) {
 	int timer = 0;

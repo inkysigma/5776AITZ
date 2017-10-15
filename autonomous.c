@@ -1,4 +1,4 @@
-#include "motor.h"
+#include "core/motor.h"
 
 bool isKill(int current, int target, int time, int max) {
 	if (abs(current) < target && time > max) {
