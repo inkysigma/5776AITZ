@@ -1,7 +1,7 @@
 #include "pragmas.h"
 
-const int SLOPE;
-const int Y_INTERCEPT;
+const int SLOPE = 25;
+const int Y_INTERCEPT= 1;
 const int BOTTOM;
 
 void buildStack(int level) {

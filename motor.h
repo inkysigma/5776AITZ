@@ -1,10 +1,17 @@
 #include "corrector.c"
+
 const OUT_ANGLE = 90;
 const IN_ANGLE = 0;
 const FAST_SPEED = 100;
 const SLOW_ANGLE = 45;
 const SLOW_SPEED = 50
 const SYNC_SPEED = 15;
+
+#define CLAW_TIME 2000
+#define SWITCH_TIME 2000
+
+void moveSwitchLift(int power);
+
 void moveDrive(int left, int right) {
 	motor[LeftDrive] = left;
 	motor[RightDrive] = -right;
@@ -39,6 +46,41 @@ void closeClaw(int power) {
 
 void stopClaw() {
 	openClaw(0);
+}
+
+void openClawFully() {
+	int delay = 0;
+	openClaw(40);
+	while (delay < CLAW_TIME) {
+		delay(20);
+		delay += 20;
+	}
+}
+
+void closeClawFully() {
+	// using timing for now
+	int delay = 0;
+	openClaw(-40);
+	while (delay < CLAW_TIME) {
+		wait1MSec(20);
+		delay += 20;
+	}
+}
+
+bool prevOutwardState = 1;
+
+void switchClaw() {
+	// move the switch lift until it rotates the other way
+	int delay = 0;
+	moveSwitchLift(prevOutwardState * 100);
+	while (delay < SWITCH_TIME) {
+		wait1Msec(20);
+		delay += 20;
+	}
+	prevOutwardState = -prevOutwardState;
+}
+
+void moveLiftTo(int target) {
 }
 
 void moveLeftMogo(int power) {
