@@ -23,12 +23,14 @@
 #include "stall.c"
 #include "motor.h"
 #include "motor_ops.h"
+#pragma platform(VEX2)
 
 task main()
 {
+	setInit(SensorValue[RightLiftPot], SensorValue[LeftLiftPot]);
 	while (true) {
-		if (vexRT[Btn5D]) {
-			moveLiftTo(5, true);
+		if (vexRT[Btn7L]) {
+			moveLiftTo(10, true);
 		}
 
 		if (vexRT[Btn7U]) {
@@ -43,6 +45,10 @@ task main()
 
 		if (vexRT[Btn8U]) {
 			switchClaw();
+		}
+
+		if (vexRT[Btn8L]) {
+			releaseCone();
 		}
 
 
