@@ -1,8 +1,6 @@
 #include "sensors.h"
 
-
-#define CLAW_TIME 2000
-#define SWITCH_TIME 2000
+#define CLAW_TIME 30
 #define LEVEL_CHANGE 30
 
 void moveSwitchLift(int power);
@@ -32,7 +30,7 @@ void moveLift (int power) {
 
 
 void openClaw(int power) {
-	motor[Claw] = power;
+	motor[Claw] = -power;
 }
 
 void closeClaw(int power) {
@@ -43,41 +41,30 @@ void stopClaw() {
 	openClaw(0);
 }
 
-void openClawFully() {
-	int d = 0;
-	openClaw(40);
-	while (d < CLAW_TIME) {
-		delay(20);
-		d += 20;
-	}
+void openClawFully(bool stall) {
+	openClaw(70);
+	wait1Msec(CLAW_TIME);
+	openClaw(25);
 }
 
 void closeClawFully() {
-	// using timing for now
-	int d = 0;
-	openClaw(-40);
-	while (d < CLAW_TIME) {
-		wait1MSec(20);
-		d += 20;
-	}
+	closeClaw(70);
+	wait1Msec(CLAW_TIME);
 }
 
-bool prevOutwardState = 1;
+int prevOutwardState = 1;
 
-void switchClaw() {
+void lowerClaw(int power) {
 	// move the switch lift until it rotates the other way
-	int delay = 0;
-	moveSwitchLift(prevOutwardState * 100);
-	while (delay < SWITCH_TIME) {
-		wait1Msec(20);
-		delay += 20;
-	}
-	prevOutwardState = -prevOutwardState;
+  moveSwitchLift(power);
+}
+
+void raiseClaw(int power) {
+	moveSwitchLift(-power);
 }
 
 void moveLeftMogo(int power) {
-	int output = getMogoCorrection(power);
-	motor[LeftMobileGoal] = output;
+	motor[LeftMobileGoal] = -power;
 }
 
 void moveRightMogo(int power) {
@@ -86,11 +73,11 @@ void moveRightMogo(int power) {
 
 void moveGoal(int power) {
 	moveLeftMogo(power);
-	moveRightMogo(-power);
+	moveRightMogo(power);
 }
 
 void moveSwitchLift(int power) {
-	motor[SwitchLift] = power;
+	motor[SwitchLift] = -power;
 }
 
 
@@ -98,4 +85,3 @@ void applyStall() {
 	moveRightLift(10);
 	moveLeftLift(10);
 }
-
