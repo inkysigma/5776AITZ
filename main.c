@@ -29,9 +29,6 @@
 #include "Vex_Competition_Includes.c"
 
 
-
-bool pidrunning = true;
-
 void pre_auton() {
 	datalogClear();
 
@@ -49,31 +46,13 @@ task autonomous() {
 }
 
 task usercontrol() {
-	pid config;
-	pid rconfig;
+	pid * lconfig = initPid(1, 0, 0, 15);
+	pid * rconfig = initPid(1, 0, 0, 15);
 
-	config.kp = 1;
-	config.ki = 0;
-	config.kd = 0;
-	config.dt = 15;
-	config.min_int = -30;
-	config.max_int = 30;
-	config.min_t = -120;
-	config.max_t = 120;
-
-	rconfig.kp = 1;
-	rconfig.ki = 0;
-	rconfig.kd = 0;
-	rconfig.dt = 15;
-	rconfig.min_int = -30;
-	rconfig.max_int = 30;
-	rconfig.min_t = -120;
-	rconfig.max_t = 120;
-
-	setLeftConfig(config);
+	setLeftConfig(lconfig);
 	setRightConfig(rconfig);
 
-	startLeftPid();
+	bool pidrunning = false;
 
 	while (true) {
 		// drive code

@@ -18,26 +18,26 @@ struct pid {
 pid lliftConfig;
 pid rliftConfig;
 
-void setRightConfig(pid rconfig) {
-	rliftConfig.kp = rconfig.kp;
-	rliftConfig.ki = rconfig.ki;
-	rliftConfig.kd = rconfig.kd;
-	rliftConfig.dt = rconfig.dt;
-	rliftConfig.min_int = rconfig.min_int;
-	rliftConfig.max_int = rconfig.max_int;
-	rliftConfig.min_t = rconfig.min_t;
-	rliftConfig.max_t = rconfig.max_t;
+void setRightConfig(pid * rconfig) {
+	rliftConfig.kp = rconfig->kp;
+	rliftConfig.ki = rconfig->ki;
+	rliftConfig.kd = rconfig->kd;
+	rliftConfig.dt = rconfig->dt;
+	rliftConfig.min_int = rconfig->min_int;
+	rliftConfig.max_int = rconfig->max_int;
+	rliftConfig.min_t = rconfig->min_t;
+	rliftConfig.max_t = rconfig->max_t;
 }
 
-void setLeftConfig(pid lconfig) {
-	lliftConfig.kp = lconfig.kp;
-	lliftConfig.ki = lconfig.ki;
-	lliftConfig.kd = lconfig.kd;
-	lliftConfig.dt = lconfig.dt;
-	lliftConfig.min_int = lconfig.min_int;
-	lliftConfig.max_int = lconfig.max_int;
-	lliftConfig.min_t = lconfig.min_t;
-	lliftConfig.max_t = lconfig.max_t;
+void setLeftConfig(pid * lconfig) {
+	lliftConfig.kp = lconfig->kp;
+	lliftConfig.ki = lconfig->ki;
+	lliftConfig.kd = lconfig->kd;
+	lliftConfig.dt = lconfig->dt;
+	lliftConfig.min_int = lconfig->min_int;
+	lliftConfig.max_int = lconfig->max_int;
+	lliftConfig.min_t = lconfig->min_t;
+	lliftConfig.max_t = lconfig->max_t;
 }
 
 // holdLift holds the lift at a specific position using a PID loop. This should target the right side
@@ -116,4 +116,20 @@ void stopRightPid() {
 void stopLeftPid() {
 	lir = false;
 	stopTask(holdLeftLift);
+}
+
+pid * initPid(float kp, float ki, float kd, int dt) {
+	pid config;
+	pid * ref = &config;
+
+	ref->kp = kp;
+	ref->ki = ki;
+	ref->kd = kd;
+	ref->dt = dt;
+	ref->min_int = -30;
+	ref->max_int = 30;
+	ref->min_t = -110;
+	ref->max_t = 110;
+
+	return ref;
 }
