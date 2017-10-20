@@ -1,5 +1,6 @@
 #include "core/motor.h"
 #include "core/sensors.h"
+#include "util/concurrency.h"
 
 #define CONE_POT_HEIGHT 140
 #define CONE_POT_CONST 5
@@ -21,10 +22,10 @@ const int SYNC_SPEED = 15;
 void raiseLiftTo(int cone_level, bool stall) {
 	while (getLeftPot() < CONE_POT_HEIGHT * cone_level + CONE_POT_CONST) {
 		moveLift(90);
-		wait1Msec(25);
+		wait1Msec(5;
 	}
 	if (stall) {
-		wait1Msec(100);
+		wait1Msec(170);
 		applyStall();
 	}
 	else {
@@ -33,12 +34,31 @@ void raiseLiftTo(int cone_level, bool stall) {
 }
 
 void lowerLiftTo(int cone_level, bool stall) {
-	while (getLeftPot() > CONE_POT_HEIGHT * cone_level + CONE_POT_CONST) {
-		moveLift(-70);
+
+	executeUntil({
+		moveLift(-90);
 		wait1Msec(5);
-	}
+	},
+	getLeftPot() > CONE_POT_HEIGHT * cone_level + CONE_POT_CONST,
+	4000);
+
 	if (stall) {
-		wait1Msec(100);
+		wait1Msec(170);
+		applyStall();
+	}
+	else {
+		moveLift(0);
+	}
+}
+
+void raiseClawPartial(bool stall) {
+	executeUntil({
+		raiseClaw(70);
+		wait1Msec(5);
+	},
+	SensorValue[SwitchLiftPot] > 3200, 4000);
+		if (stall) {
+		wait1Msec(170);
 		applyStall();
 	}
 	else {

@@ -30,10 +30,7 @@ task main()
 {
 
 	clearDebugStream();
-	/*for (int x = 0; x < 5; x++) {
-		writeDebugStreamLine("did the thing");
-		raiseLiftTo(x, true);
-		wait1Msec(1000);
-	}*/
-	buildStack(3);
+	for (int x = 0; x < 5; x++) {
+		buildStack(x);
+	}
 }
