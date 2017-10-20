@@ -69,6 +69,5 @@ void moveSwitchLift(int power) {
 
 
 void applyStall() {
-	moveRightLift(10);
-	moveLeftLift(10);
+	moveLift(10);
 }

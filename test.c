@@ -25,10 +25,15 @@
 #include "core/motor.h"
 #include "ops/motor_ops.h"
 #include "ops/build_stack.c"
-#pragma platform(VEX2)
 
 task main()
 {
-	buildStack(0);
 
+	clearDebugStream();
+	/*for (int x = 0; x < 5; x++) {
+		writeDebugStreamLine("did the thing");
+		raiseLiftTo(x, true);
+		wait1Msec(1000);
+	}*/
+	buildStack(3);
 }

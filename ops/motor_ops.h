@@ -1,13 +1,13 @@
 #include "core/motor.h"
 #include "core/sensors.h"
 
-#define CONE_POT_HEIGHT 2
+#define CONE_POT_HEIGHT 140
 #define CONE_POT_CONST 5
-#define CONE_RELEASE_CONST 10
+#define CONE_RELEASE_CONST 50
 #define MIN_LIFT_POT 0
 #define SWITCH_TIME 1250
 #define LOW_SWITCH_POT 3800
-#define HIGH_SWITCH_POT 1775
+#define HIGH_SWITCH_POT 1950
 #define OPEN_CLAW_TIME 70
 #define CLOSE_CLAW_TIME 70
 
@@ -20,10 +20,11 @@ const int SYNC_SPEED = 15;
 
 void raiseLiftTo(int cone_level, bool stall) {
 	while (getLeftPot() < CONE_POT_HEIGHT * cone_level + CONE_POT_CONST) {
-		moveLift(70);
-		wait1Msec(5);
+		moveLift(90);
+		wait1Msec(25);
 	}
 	if (stall) {
+		wait1Msec(100);
 		applyStall();
 	}
 	else {
@@ -37,6 +38,7 @@ void lowerLiftTo(int cone_level, bool stall) {
 		wait1Msec(5);
 	}
 	if (stall) {
+		wait1Msec(100);
 		applyStall();
 	}
 	else {
