@@ -79,15 +79,13 @@ void releaseCone(bool close) {
 
 
 void lowerClawFully() {
-  lowerClaw(127);
-  while (SensorValue[SwitchLiftPot] < LOW_SWITCH_POT) {
-		wait1Msec(50);
-	}
+  	lowerClaw(100);
+  	executeUntil(wait1Msec(50), SensorValue[SwitchLiftPot] < LOW_SWITCH_POT, 4000);
 	lowerClaw(0);
 }
 
 void raiseClawFully() {
-  raiseClaw(127);
+  raiseClaw(100);
   while (SensorValue[SwitchLiftPot] > HIGH_SWITCH_POT) {
 		wait1Msec(50);
 	}
@@ -104,7 +102,7 @@ void openClawFully() {
 void closeClawFully() {
 	closeClaw(70);
 	wait1Msec(CLOSE_CLAW_TIME);
-	closeClaw(0);
+	closeClaw(15);
 	wait1Msec(40);
 }
 

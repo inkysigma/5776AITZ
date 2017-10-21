@@ -31,6 +31,10 @@ void buildStack(int current_level) {
 
 	lowerLiftTo(current_level, true);
 
+	delay(150);
+
 	releaseCone(false);
 	writeDebugStreamLine("released the cone");
+
+	delay(100);
 }
