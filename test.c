@@ -28,5 +28,8 @@
 
 task main()
 {
-	buildStack(0);
+	clearDebugStream();
+	for (int i = 0; i < 5; i++) {
+		buildStack(0);
+	}
 }
