@@ -25,11 +25,26 @@
 #include "core/motor.h"
 #include "ops/motor_ops.h"
 #include "ops/build_stack.c"
+#include "core/motor.h"
 
 task main()
 {
-	clearDebugStream();
-	for (int i = 0; i < 5; i++) {
-		buildStack(0);
+	while (true) {
+		if (vexRT[Btn5U]) {
+			moveLift(100);
+		} else if (vexRT[Btn5D]) {
+			moveLift(-100);
+		} else {
+			applyStall();
+		}
+
+		if (vexRT[Btn7U]) {
+			clearDebugStream();
+			for (int i = 0; i < 5; i++) {
+				writeDebugStreamLine("running build stack %d", i);
+				buildStack(i);
+				writeDebugStreamLine("");
+			}
+		}
 	}
 }

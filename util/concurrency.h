@@ -2,7 +2,7 @@
 #define CONCURRENCY_MACRO_CONTROL
 
 #define executeUntil(method, condition, timeout) {\
-	ClearTimer(T1); \
+	clearTimer(T1); \
 	while (condition && time1[T1] < timeout) { \
 		method \
 	} \

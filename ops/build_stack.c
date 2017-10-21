@@ -2,24 +2,23 @@
 
 void buildStack(int current_level) {
 	// start with claw at top and get cone and return to top to dispense
-	// raiseLiftTo(current_level, true);
-	// writeDebugStreamLine("raised lift");
+	raiseLiftTo(current_level, true);
+	writeDebugStreamLine("raised lift");
 
-	// move the claw to the ending positions
-	openClawFully();
-	writeDebugStreamLine("opened claw fully");
-
-	lowerClawFully();
+	lowerClawPartial(true);
 	writeDebugStreamLine("lowered claw fully");
 
 	lowerLiftTo(0, false);
 	writeDebugStreamLine("lowered the lift to ground state");
+
+	lowerClawFully();
 
 	closeClawFully();
 	writeDebugStreamLine("closed the claw fully");
 
 	// extend the claw a bit further so that we don't get caught
 	raiseClawPartial(true);
+	writeDebugStreamLine("raised the claw partially");
 
 	// swtich the claw back on top
 	raiseLiftTo(current_level, true);
@@ -27,11 +26,8 @@ void buildStack(int current_level) {
 
 	raiseClawFully();
 	writeDebugStreamLine("raised claw fully");
-	wait1Msec(250);
 
 	lowerLiftTo(current_level, true);
-
-	delay(150);
 
 	releaseCone(false);
 	writeDebugStreamLine("released the cone");
