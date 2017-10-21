@@ -13,6 +13,8 @@ struct pid {
 	float min_t;
 	float max_t;
 	float dt;
+	tMotor motors;
+	tSensors sensor;
 };
 
 pid lliftConfig;
@@ -132,4 +134,10 @@ pid * initPid(float kp, float ki, float kd, int dt) {
 	ref->max_t = 110;
 
 	return ref;
+}
+
+void resetPid(pid * config) {
+}
+
+float pidStep(pid * config) {
 }
