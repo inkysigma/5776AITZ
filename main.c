@@ -25,6 +25,8 @@
 #include "core/motor.h"
 #include "core/sensors.h"
 #include "ops/pid.c"
+#include "ops/motor_ops.h"
+#include "ops/build_stack.c"
 
 #include "Vex_Competition_Includes.c"
 

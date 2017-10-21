@@ -1,35 +1,36 @@
-#include "ops/motor_ops.h"
-
-const int SLOPE = 25;
-const int Y_INTERCEPT= 1;
-const int BOTTOM = SensorValue[LeftLiftPot];
+#include "motor_ops.h"
 
 void buildStack(int current_level) {
 	// start with claw at top and get cone and return to top to dispense
-	moveLiftTo(current_level, true);
-	writeDebugStreamLine("raised lift");
+	// raiseLiftTo(current_level, true);
+	// writeDebugStreamLine("raised lift");
 
 	// move the claw to the ending positions
-	openClawFully(true);
+	openClawFully();
 	writeDebugStreamLine("opened claw fully");
 
 	lowerClawFully();
 	writeDebugStreamLine("lowered claw fully");
 
-	lowerLiftTo(0, true);
+	lowerLiftTo(0, false);
 	writeDebugStreamLine("lowered the lift to ground state");
 
 	closeClawFully();
 	writeDebugStreamLine("closed the claw fully");
 
+	// extend the claw a bit further so that we don't get caught
+	raiseClawPartial(true);
+
 	// swtich the claw back on top
-	moveLiftTo(current_level, true);
+	raiseLiftTo(current_level, true);
 	writeDebugStreamLine("raised the lift back up");
 
-  raiseClawFully();
-  writeDebugStreamLine("raised claw fully");
+	raiseClawFully();
+	writeDebugStreamLine("raised claw fully");
+	wait1Msec(250);
 
-  // release the cone
+	lowerLiftTo(current_level, true);
+
 	releaseCone(false);
-	writeDebugStream("released the cone");
+	writeDebugStreamLine("released the cone");
 }

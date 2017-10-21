@@ -1,13 +1,16 @@
 #include "core/motor.h"
 #include "core/sensors.h"
+#include "util/concurrency.h"
 
-#define CONE_POT_HEIGHT 2
+#define CONE_POT_HEIGHT 140
 #define CONE_POT_CONST 5
-#define CONE_RELEASE_CONST 10
+#define CONE_RELEASE_CONST 50
 #define MIN_LIFT_POT 0
 #define SWITCH_TIME 1250
 #define LOW_SWITCH_POT 3800
-#define HIGH_SWITCH_POT 1700
+#define HIGH_SWITCH_POT 1675
+#define OPEN_CLAW_TIME 70
+#define CLOSE_CLAW_TIME 70
 
 const int OUT_ANGLE = 90;
 const int IN_ANGLE = 0;
@@ -16,11 +19,13 @@ const int SLOW_ANGLE = 45;
 const int SLOW_SPEED = 50;
 const int SYNC_SPEED = 15;
 
-void moveLiftTo(int cone_level, bool stall) {
+void raiseLiftTo(int cone_level, bool stall) {
 	while (getLeftPot() < CONE_POT_HEIGHT * cone_level + CONE_POT_CONST) {
 		moveLift(90);
+		wait1Msec(5;
 	}
 	if (stall) {
+		wait1Msec(170);
 		applyStall();
 	}
 	else {
@@ -29,10 +34,31 @@ void moveLiftTo(int cone_level, bool stall) {
 }
 
 void lowerLiftTo(int cone_level, bool stall) {
-	while (getLeftPot() > CONE_POT_HEIGHT * cone_level + CONE_POT_CONST) {
+
+	executeUntil({
 		moveLift(-90);
-	}
+		wait1Msec(5);
+	},
+	getLeftPot() > CONE_POT_HEIGHT * cone_level + CONE_POT_CONST,
+	4000);
+
 	if (stall) {
+		wait1Msec(170);
+		applyStall();
+	}
+	else {
+		moveLift(0);
+	}
+}
+
+void raiseClawPartial(bool stall) {
+	executeUntil({
+		raiseClaw(127);
+		wait1Msec(5);
+	},
+	SensorValue[SwitchLiftPot] > 3200, 4000);
+		if (stall) {
+		wait1Msec(170);
 		applyStall();
 	}
 	else {
@@ -53,7 +79,7 @@ void releaseCone(bool close) {
 
 
 void lowerClawFully() {
-  lowerClaw(100);
+  lowerClaw(127);
   while (SensorValue[SwitchLiftPot] < LOW_SWITCH_POT) {
 		wait1Msec(50);
 	}
@@ -61,13 +87,26 @@ void lowerClawFully() {
 }
 
 void raiseClawFully() {
-  raiseClaw(100);
+  raiseClaw(127);
   while (SensorValue[SwitchLiftPot] > HIGH_SWITCH_POT) {
 		wait1Msec(50);
 	}
 	lowerClaw(0);
 }
 
+void openClawFully() {
+	openClaw(80);
+	wait1Msec(OPEN_CLAW_TIME);
+	openClaw(0);
+	wait1Msec(40);
+}
+
+void closeClawFully() {
+	closeClaw(70);
+	wait1Msec(CLOSE_CLAW_TIME);
+	closeClaw(0);
+	wait1Msec(40);
+}
 
 void moveMogoOut() {
 	while (SensorValue[MogoRightPot] < SLOW_ANGLE) {

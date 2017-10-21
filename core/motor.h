@@ -1,6 +1,5 @@
 #include "sensors.h"
 
-#define CLAW_TIME 30
 #define LEVEL_CHANGE 30
 
 void moveSwitchLift(int power);
@@ -23,11 +22,10 @@ void moveRightLift(int power) {
 	motor[RightLift] = power;
 }
 
-void moveLift (int power) {
+void moveLift(int power) {
 	moveLeftLift(power);
 	moveRightLift(power);
 }
-
 
 void openClaw(int power) {
 	motor[Claw] = -power;
@@ -39,17 +37,6 @@ void closeClaw(int power) {
 
 void stopClaw() {
 	openClaw(0);
-}
-
-void openClawFully(bool stall) {
-	openClaw(70);
-	wait1Msec(CLAW_TIME);
-	openClaw(25);
-}
-
-void closeClawFully() {
-	closeClaw(70);
-	wait1Msec(CLAW_TIME);
 }
 
 int prevOutwardState = 1;
@@ -82,6 +69,5 @@ void moveSwitchLift(int power) {
 
 
 void applyStall() {
-	moveRightLift(10);
-	moveLeftLift(10);
+	moveLift(10);
 }
