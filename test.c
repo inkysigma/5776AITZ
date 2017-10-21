@@ -29,6 +29,14 @@
 
 task main()
 {
+	clearDebugStream();
+	writeDebugStreamLine("raising claw fully {");
+	raiseClawFully();
+	writeDebugStreamLine("}");
+	writeDebugStreamLine("lower claw fully {");
+	lowerClawFully();
+	writeDebugStreamLine("}");
+	/*
 	while (true) {
 		if (vexRT[Btn5U]) {
 			moveLift(100);
@@ -41,10 +49,10 @@ task main()
 		if (vexRT[Btn7U]) {
 			clearDebugStream();
 			for (int i = 0; i < 5; i++) {
-				writeDebugStreamLine("running build stack %d", i);
+				writeDebugStreamLine("running build stack %d {", i);
 				buildStack(i);
-				writeDebugStreamLine("");
+				writeDebugStreamLine("}");
 			}
 		}
-	}
+	}*/
 }

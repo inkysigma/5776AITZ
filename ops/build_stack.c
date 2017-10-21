@@ -2,35 +2,48 @@
 
 void buildStack(int current_level) {
 	// start with claw at top and get cone and return to top to dispense
+	writeDebugStreamLine("	raising lift {");
 	raiseLiftTo(current_level, true);
-	writeDebugStreamLine("raised lift");
+	writeDebugStreamLine("	}");
 
+	writeDebugStreamLine("	lowering claw fully {");
 	lowerClawPartial(true);
-	writeDebugStreamLine("lowered claw fully");
+	writeDebugStreamLine("	}");
 
+
+	writeDebugStreamLine("	lowering the lift to ground state {");
 	lowerLiftTo(0, false);
-	writeDebugStreamLine("lowered the lift to ground state");
+	writeDebugStreamLine("	}");
 
+	writeDebugStreamLine("	lowering claw fully {");
 	lowerClawFully();
+	writeDebugStreamLine("	}");
 
+	writeDebugStreamLine("	closing the claw fully {");
 	closeClawFully();
-	writeDebugStreamLine("closed the claw fully");
+	writeDebugStream("	}");
 
-	// extend the claw a bit further so that we don't get caught
+	// extend the claw a bit further so that we don't get caugh
+	writeDebugStreamLine("	raising the claw partially {");
 	raiseClawPartial(true);
-	writeDebugStreamLine("raised the claw partially");
+	writeDebugStreamLine("	}");
 
 	// swtich the claw back on top
+	writeDebugStreamLine("	raising the lift back up {");
 	raiseLiftTo(current_level, true);
-	writeDebugStreamLine("raised the lift back up");
+	writeDebugStreamLine("	}");
 
+	writeDebugStreamLine("	raising claw fully {");
 	raiseClawFully();
-	writeDebugStreamLine("raised claw fully");
+	writeDebugStreamLine("	}");
 
+	writeDebugStreamLine("	lowering lift {");
 	lowerLiftTo(current_level, true);
-
+	writeDebugStreamLine("	}");
+	writeDebugStreamLine("	releasing cone {");
 	releaseCone(false);
-	writeDebugStreamLine("released the cone");
+	writeDebugStreamLine("	}");
+
 
 	delay(100);
 }

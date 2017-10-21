@@ -6,8 +6,8 @@
 #define CONE_POT_CONST 10
 #define CONE_RELEASE_CONST 50
 
-#define LOW_SWITCH_POT 3800
-#define HIGH_SWITCH_POT 1900
+#define LOW_SWITCH_POT 3400
+#define HIGH_SWITCH_POT 2500
 #define MID_SWITCH_POT 2950
 #define POWER_SWITCH_POT 2800
 
@@ -27,7 +27,7 @@ void raiseLiftTo(int cone_level, bool stall) {
 		wait1Msec(5);
 	}, getLeftPot() < CONE_POT_HEIGHT * cone_level + CONE_POT_CONST, 2500);
 
-	writeDebugStreamLine("Stopped raising lift at %d which must be greater than %d", getLeftPot(),
+	writeDebugStreamLine("		Stopped raising lift at %d which must be greater than %d", getLeftPot(),
 		CONE_POT_HEIGHT * cone_level + CONE_POT_CONST);
 
 	if (stall) {
@@ -48,7 +48,7 @@ void lowerLiftTo(int cone_level, bool stall) {
 	getLeftPot() > CONE_POT_HEIGHT * cone_level + CONE_POT_CONST,
 	4000);
 
-	writeDebugStreamLine("Stopped lowering lift at %d which must be less than %d", getLeftPot(),
+	writeDebugStreamLine("		Stopped lowering lift at %d which must be less than %d", getLeftPot(),
 		CONE_POT_HEIGHT * cone_level + CONE_POT_CONST);
 
 	if (stall) {
@@ -84,7 +84,7 @@ void raiseClawPartial(bool stall) {
 	SensorValue[SwitchLiftPot] > MID_SWITCH_POT,
 	2000);
 
-	writeDebugStreamLine("Stopped partially raising at %d which must be less than %d", SensorValue[SwitchLiftPot],
+	writeDebugStreamLine("		Stopped partially raising at %d which must be less than %d", SensorValue[SwitchLiftPot],
 		MID_SWITCH_POT);
 
 	if (stall) {
@@ -110,7 +110,7 @@ void releaseCone(bool close) {
 void lowerClawFully() {
   lowerClaw(90);
   executeUntil(wait1Msec(50), SensorValue[SwitchLiftPot] < LOW_SWITCH_POT, 4000);
-  writeDebugStreamLine("Stopped lowering claw at %d which must be greater than than %d", SensorValue[SwitchLiftPot],
+  writeDebugStreamLine("		Stopped lowering claw at %d which must be greater than than %d", SensorValue[SwitchLiftPot],
 		LOW_SWITCH_POT);
 	lowerClaw(0);
 }
