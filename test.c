@@ -28,5 +28,5 @@
 
 task main()
 {
-	raiseClawFully(true);
+	buildStack(0);
 }
