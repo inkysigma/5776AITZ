@@ -28,9 +28,5 @@
 
 task main()
 {
-
-	clearDebugStream();
-	for (int x = 0; x < 5; x++) {
-		buildStack(x);
-	}
+	raiseClawFully(true);
 }

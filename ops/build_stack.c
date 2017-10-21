@@ -6,7 +6,7 @@ void buildStack(int current_level) {
 	// writeDebugStreamLine("raised lift");
 
 	// move the claw to the ending positions
-	openClawFully(true);
+	openClawFully();
 	writeDebugStreamLine("opened claw fully");
 
 	lowerClawFully();
@@ -15,7 +15,7 @@ void buildStack(int current_level) {
 	lowerLiftTo(0, false);
 	writeDebugStreamLine("lowered the lift to ground state");
 
-	closeClawFully(true);
+	closeClawFully();
 	writeDebugStreamLine("closed the claw fully");
 
 	// extend the claw a bit further so that we don't get caught

@@ -8,7 +8,7 @@
 #define MIN_LIFT_POT 0
 #define SWITCH_TIME 1250
 #define LOW_SWITCH_POT 3800
-#define HIGH_SWITCH_POT 1950
+#define HIGH_SWITCH_POT 2500
 #define OPEN_CLAW_TIME 70
 #define CLOSE_CLAW_TIME 70
 
@@ -53,7 +53,7 @@ void lowerLiftTo(int cone_level, bool stall) {
 
 void raiseClawPartial(bool stall) {
 	executeUntil({
-		raiseClaw(70);
+		raiseClaw(127);
 		wait1Msec(5);
 	},
 	SensorValue[SwitchLiftPot] > 3200, 4000);
@@ -79,7 +79,7 @@ void releaseCone(bool close) {
 
 
 void lowerClawFully() {
-  lowerClaw(100);
+  lowerClaw(127);
   while (SensorValue[SwitchLiftPot] < LOW_SWITCH_POT) {
 		wait1Msec(50);
 	}
@@ -87,26 +87,24 @@ void lowerClawFully() {
 }
 
 void raiseClawFully() {
-  raiseClaw(100);
+  raiseClaw(127);
   while (SensorValue[SwitchLiftPot] > HIGH_SWITCH_POT) {
 		wait1Msec(50);
 	}
 	lowerClaw(0);
 }
 
-void openClawFully(bool stall) {
+void openClawFully() {
 	openClaw(80);
 	wait1Msec(OPEN_CLAW_TIME);
 	openClaw(0);
 	wait1Msec(40);
 }
 
-void closeClawFully(bool stall) {
+void closeClawFully() {
 	closeClaw(70);
 	wait1Msec(CLOSE_CLAW_TIME);
 	closeClaw(0);
-	if (stall)
-		closeClaw(20);
 	wait1Msec(40);
 }
 
