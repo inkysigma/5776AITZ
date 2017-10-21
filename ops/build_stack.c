@@ -19,6 +19,8 @@ void buildStack(int current_level) {
 	lowerClawFully();
 	writeDebugStreamLine("	}");
 
+	delay(750);
+
 	writeDebugStreamLine("	closing the claw fully {");
 	closeClawFully();
 	writeDebugStream("	}");
@@ -40,10 +42,12 @@ void buildStack(int current_level) {
 	writeDebugStreamLine("	lowering lift {");
 	lowerLiftTo(current_level, true);
 	writeDebugStreamLine("	}");
+
+	delay(400);
+
 	writeDebugStreamLine("	releasing cone {");
 	releaseCone(false);
 	writeDebugStreamLine("	}");
-
 
 	delay(100);
 }

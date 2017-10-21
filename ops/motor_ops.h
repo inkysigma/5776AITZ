@@ -7,7 +7,7 @@
 #define CONE_RELEASE_CONST 50
 
 #define LOW_SWITCH_POT 3400
-#define HIGH_SWITCH_POT 2500
+#define HIGH_SWITCH_POT 1800
 #define MID_SWITCH_POT 2950
 #define POWER_SWITCH_POT 2800
 
@@ -108,7 +108,7 @@ void releaseCone(bool close) {
 
 
 void lowerClawFully() {
-  lowerClaw(90);
+  lowerClaw(100);
   executeUntil(wait1Msec(50), SensorValue[SwitchLiftPot] < LOW_SWITCH_POT, 4000);
   writeDebugStreamLine("		Stopped lowering claw at %d which must be greater than than %d", SensorValue[SwitchLiftPot],
 		LOW_SWITCH_POT);
@@ -134,7 +134,7 @@ void openClawFully() {
 }
 
 void closeClawFully() {
-	closeClaw(75);
+	closeClaw(85);
 	wait1Msec(CLOSE_CLAW_TIME);
 	closeClaw(20);
 	wait1Msec(30);

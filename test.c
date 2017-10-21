@@ -36,7 +36,6 @@ task main()
 	writeDebugStreamLine("lower claw fully {");
 	lowerClawFully();
 	writeDebugStreamLine("}");
-	/*
 	while (true) {
 		if (vexRT[Btn5U]) {
 			moveLift(100);
@@ -54,5 +53,14 @@ task main()
 				writeDebugStreamLine("}");
 			}
 		}
-	}*/
+		if (vexRT[Btn6U]) {
+			openClaw(100);
+		}
+		else if (vexRT[Btn6D]) {
+			closeClaw(100);
+		}
+		else {
+			stopClaw();
+		}
+	}
 }
