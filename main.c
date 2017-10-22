@@ -54,24 +54,28 @@ task usercontrol() {
 	setLeftConfig(lconfig);
 	setRightConfig(rconfig);
 
+	int cone_counter = 0;
+
 	bool pidrunning = false;
 
 	while (true) {
 		// drive code
 		moveDrive(vexRT[Ch3], vexRT[Ch2]);
 
+		// Btn6U/D should be assigned to switch lift and functionality
 		if (vexRT[Btn6U]) {
-			openClaw(127);
+			raiseClaw(127);;
 		}
 		else if (vexRT[Btn6D]) {
-			closeClaw(127);
+			lowerClaw(127);
 		}
 		else {
-			stopClaw();
+			raiseClaw(0);
 		}
 
+		// Btn8L/D should be reserved for mobile goal movement
 		if (vexRT[Btn8L]) {
-			moveGoal(100);
+			moveGoal(60);
 		}
 		else if (vexRT[Btn8R]) {
 			moveGoal(-100);
@@ -79,6 +83,16 @@ task usercontrol() {
 		else {
 			moveGoal(0);
 		}
+
+		// Btn8U/D should be used for buildStack control
+		if (vexRT[Btn8U]) {
+			buildStack(cone_counter);
+			cone_counter++;
+		}
+		else if (vexRT[Btn8D]) {
+			cone_counter--;
+		}
+
 
 		if (vexRT[Btn7U]) {
 			moveSwitchLift(127);
@@ -113,7 +127,7 @@ task usercontrol() {
 				startRightPid(SensorValue[RightLiftPot]);
 			}
 			else {
-				moveLift(0);
+				applyStall();
 			}
 		}
 
