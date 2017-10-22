@@ -24,7 +24,6 @@
 
 #include "core/motor.h"
 #include "core/sensors.h"
-#include "ops/pid.c"
 #include "ops/motor_ops.h"
 #include "ops/build_stack.c"
 
@@ -48,11 +47,6 @@ task autonomous() {
 }
 
 task usercontrol() {
-	pid * lconfig = initPid(1, 0, 0, 15);
-	pid * rconfig = initPid(1, 0, 0, 15);
-
-	setLeftConfig(lconfig);
-	setRightConfig(rconfig);
 
 	int cone_counter = 0;
 
@@ -105,41 +99,14 @@ task usercontrol() {
 		}
 
 		if (vexRT[Btn5U]) {
-			stopRightPid();
-			if (pidrunning) {
-				moveRightLift(100);
-			}
-			else {
-				moveLift(100);
-			}
+			moveLift(100);
+
 		}
 		else if (vexRT[Btn5D]) {
-			stopRightPid();
-			if (pidrunning) {
-				moveRightLift(-100);
-			}
-			else {
-				moveLift(-100);
-			}
+			moveLift(-100);
 		}
 		else {
-			if (pidrunning) {
-				startRightPid(SensorValue[RightLiftPot]);
-			}
-			else {
-				applyStall();
-			}
-		}
-
-		if (vexRT[Btn7L]) {
-			stopRightPid();
-			stopLeftPid();
-			pidrunning = false;
-		}
-		else if (vexRT[Btn7R]) {
-			startLeftPid();
-			startRightPid(SensorValue[RightLiftPot]);
-			pidrunning = true;
+			applyStall();
 		}
 
 	}
