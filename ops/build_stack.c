@@ -36,7 +36,7 @@ void buildStack(int current_level) {
 	writeDebugStreamLine("	}");
 
 	writeDebugStreamLine("	raising claw fully {");
-	raiseClawFully();
+	raiseClawFully(true);
 	writeDebugStreamLine("	}");
 
 	writeDebugStreamLine("	lowering lift {");

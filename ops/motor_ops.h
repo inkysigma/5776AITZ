@@ -2,12 +2,12 @@
 #include "core/sensors.h"
 #include "util/concurrency.h"
 
-#define CONE_POT_HEIGHT 80
-#define CONE_POT_CONST 10
+#define CONE_POT_HEIGHT 90
+#define CONE_POT_CONST 20
 #define CONE_RELEASE_CONST 50
 
 #define LOW_SWITCH_POT 3400
-#define HIGH_SWITCH_POT 1800
+#define HIGH_SWITCH_POT 1870
 #define MID_SWITCH_POT 2950
 #define POWER_SWITCH_POT 2800
 
@@ -68,6 +68,9 @@ void lowerClawPartial(bool stall) {
 	SensorValue[SwitchLiftPot] < MID_SWITCH_POT,
 	2000);
 
+	writeDebugStreamLine("		Stopped partially lowering at %d which must be greater than %d", SensorValue[SwitchLiftPot],
+		MID_SWITCH_POT);
+
 	if (stall) {
 		raiseClaw(15);
 	}
@@ -108,22 +111,30 @@ void releaseCone(bool close) {
 
 
 void lowerClawFully() {
-  lowerClaw(100);
-  executeUntil(wait1Msec(50), SensorValue[SwitchLiftPot] < LOW_SWITCH_POT, 4000);
+  executeUntil({
+  	lowerClaw(127);
+  	wait1Msec(5);
+  }, SensorValue[SwitchLiftPot] < LOW_SWITCH_POT, 4000);
   writeDebugStreamLine("		Stopped lowering claw at %d which must be greater than than %d", SensorValue[SwitchLiftPot],
 		LOW_SWITCH_POT);
 	lowerClaw(0);
 }
 
-void raiseClawFully() {
+void raiseClawFully(bool stall) {
   raiseClaw(127);
-  while (SensorValue[SwitchLiftPot] > POWER_SWITCH_POT) {
-		wait1Msec(15);
-	}
+  executeUntil({}, SensorValue[SwitchLiftPot] > POWER_SWITCH_POT, 4000);
+  writeDebugStreamLine("		Stopped raising claw at %d which must be less than than %d", SensorValue[SwitchLiftPot],
+		POWER_SWITCH_POT);
 	raiseClaw(90);
-	while (SensorValue[SwitchLiftPot] > HIGH_SWITCH_POT) {
+  executeUntil({}, SensorValue[SwitchLiftPot] > HIGH_SWITCH_POT, 4000);
+  if (stall) {
+  	lowerClaw(15);
 	}
-	lowerClaw(0);
+	else {
+		raiseClaw(0);
+	}
+  writeDebugStreamLine("		Stopped raising claw at %d which must be less than than %d", SensorValue[SwitchLiftPot],
+		HIGH_SWITCH_POT);
 }
 
 void openClawFully() {
