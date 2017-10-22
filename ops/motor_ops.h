@@ -98,6 +98,14 @@ void raiseClawPartial(bool stall) {
 	}
 }
 
+
+void closeClawFully() {
+	closeClaw(85);
+	wait1Msec(CLOSE_CLAW_TIME);
+	closeClaw(20);
+	wait1Msec(30);
+}
+
 void releaseCone(bool close) {
 	openClaw(100);
 	wait1Msec(CONE_RELEASE_CONST);
@@ -144,12 +152,6 @@ void openClawFully() {
 	wait1Msec(40);
 }
 
-void closeClawFully() {
-	closeClaw(85);
-	wait1Msec(CLOSE_CLAW_TIME);
-	closeClaw(20);
-	wait1Msec(30);
-}
 
 void moveMogoOut() {
 	while (SensorValue[MogoRightPot] < SLOW_ANGLE) {
