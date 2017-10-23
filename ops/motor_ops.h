@@ -7,11 +7,11 @@
 #define CONE_RELEASE_CONST 50
 
 #define LOW_SWITCH_POT 3400
-#define HIGH_SWITCH_POT 1870
+#define HIGH_SWITCH_POT 1770
 #define MID_SWITCH_POT 2950
 #define POWER_SWITCH_POT 2800
 
-#define OPEN_CLAW_TIME 70
+#define OPEN_CLAW_TIME 80
 #define CLOSE_CLAW_TIME 70
 
 const int OUT_ANGLE = 90;
@@ -146,7 +146,7 @@ void raiseClawFully(bool stall) {
 }
 
 void openClawFully() {
-	openClaw(80);
+	openClaw(90);
 	wait1Msec(OPEN_CLAW_TIME);
 	openClaw(0);
 	wait1Msec(40);

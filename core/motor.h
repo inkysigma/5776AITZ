@@ -51,11 +51,11 @@ void raiseClaw(int power) {
 }
 
 void moveLeftMogo(int power) {
-	motor[LeftMobileGoal] = -power;
+	motor[LeftMobileGoal] = power;
 }
 
 void moveRightMogo(int power) {
-	motor[RightMobileGoal] = power;
+	motor[RightMobileGoal] = -power;
 }
 
 void moveGoal(int power) {

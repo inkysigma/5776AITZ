@@ -15,3 +15,20 @@ int getLeftPot() {
 int getRightPot() {
 	return SensorValue[RightLiftPot] - rightInit;
 }
+
+
+int mobileGoalLeftInit = 0;
+int mobileGoalRightInit = 0;
+
+void setMobileGoalInit(int left, int right) {
+	mobileGoalLeftInit = left;
+	mobileGoalRightInit = right;
+}
+
+int getLeftMobilePot() {
+	return SensorValue[MogoLeftPot] - mobileGoalLeftInit;
+}
+
+int getRightMobilePot() {
+	return SensorValue[MogoRightPot] - mobileGoalRightInit;
+}
