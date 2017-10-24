@@ -12,10 +12,12 @@ pid rliftConfig;
 pid * leftConfig;
 pid * rightConfig;
 
+
 void setConfig(pid * left, pid * right) {
 	leftConfig = left;
 	rightConfig = right;
 }
+
 
 
 // holdLift holds the lift at a specific position using a PID loop. This should target the right side
