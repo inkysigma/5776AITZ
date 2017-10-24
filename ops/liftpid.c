@@ -70,12 +70,14 @@ task holdRightLift() {
 }
 
 void startRightPid(int t) {
+	resetPid(rightConfig);
 	setTarget(rightConfig, t);
 	rir = true;
 	startTask(holdRightLift);
 }
 
 void startLeftPid() {
+	resetPid(leftConfig);
 	lir = true;
 	startTask(holdLeftLift);
 }

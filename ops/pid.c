@@ -47,17 +47,20 @@ pid * initPid(float kp, float ki, float kd, int dt, tSensors sensor)
 
 void resetPid(pid *config)
 {
+	// reset the pid accumulator and prev_error
 	config->accumulation = 0;
 	config->prev_error = 0;
 }
 
 void setTarget(pid *config, float target)
 {
+	// set the target of the pid for a given instance
 	config->target = target;
 }
 
 float pidStep(pid *config)
 {
+	// calculate the value derived by a pid
 	float error = SensorValue[config->sensor] - config->target;
 	float integral = config->accumulation + error * config->dt / 1000;
 	float derivative = error - config->prev_error;
@@ -88,5 +91,6 @@ float pidStep(pid *config)
 }
 
 void waitPid(pid * config) {
+	// wait the time of a pid
 	wait1Msec(config->dt);
 }
