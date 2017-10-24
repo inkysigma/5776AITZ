@@ -9,6 +9,11 @@ int target = 0;
 pid lliftConfig;
 pid rliftConfig;
 
+pid * leftConfig;
+pid * rightConfig;
+
+/** Legacy code to ensure stability
+ * 
 void setRightConfig(pid * rconfig) {
 	rliftConfig.kp = rconfig->kp;
 	rliftConfig.ki = rconfig->ki;
@@ -34,66 +39,38 @@ void setLeftConfig(pid * lconfig) {
 	lliftConfig.min_t = lconfig->min_t;
 	lliftConfig.max_t = lconfig->max_t;
 }
+**/
+
+void setConfig(pid * left, pid * right) {
+	leftConfig = left;
+	rightConfig = right;
+}
+
 
 // holdLift holds the lift at a specific position using a PID loop. This should target the right side
 task holdLeftLift() {
-	float integral = 0;
 	float total = 0;
 	while (lir) {
-		int error = getRightPot() - getLeftPot();
-		integral += error * lliftConfig.dt/1000;
-
-		if (integral > lliftConfig.max_int) {
-			integral = lliftConfig.max_int;
-			} else if (integral < lliftConfig.min_int) {
-			integral = lliftConfig.min_int;
-		}
-
-		total = lliftConfig.kp * error + lliftConfig.ki * integral;
-
-		if (total > rliftConfig.max_t) {
-			total = rliftConfig.max_t;
-			} else if (total < rliftConfig.min_t) {
-			total = rliftConfig.min_t;
-		}
-
+		setTarget(leftConfig, getRightPot());
+		total = pidStep(leftConfig);
 		moveLeftLift(total);
-
-		wait1Msec(lliftConfig.dt);
-		datalogAddValue(0, total);
+		waitPid(leftConfig);
 	}
 }
 
 // holdRightLift should target some given target. Once the user moves up or down, this task should stop. Once movement stops,
 // this ought to start running
 task holdRightLift() {
-	float integral = 0;
-	int proportional = 0;
-	int total = 0;
+	float total = 0;
 	while (rir) {
-		int error = target - getRightPot();
-		integral += error * rliftConfig.dt/1000;
-
-		if (integral > rliftConfig.max_int) {
-			integral = rliftConfig.max_int;
-		}
-		else if (integral < rliftConfig.min_int) {
-			integral = rliftConfig.min_int;
-		}
-		float total = rliftConfig.kp * error + rliftConfig.ki * integral;
-		if (total > rliftConfig.max_t) {
-			total = rliftConfig.max_t;
-			} else if (total < rliftConfig.min_t) {
-			total = rliftConfig.min_t;
-		}
+		total = pidStep(rightConfig);
 		moveRightLift(total);
-		datalogAddValue(1, total);
-		wait1Msec(rliftConfig.dt);
+		waitPid(rightConfig);
 	}
 }
 
 void startRightPid(int t) {
-	target = t;
+	setTarget(rightConfig, t);
 	rir = true;
 	startTask(holdRightLift);
 }
