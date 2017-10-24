@@ -26,42 +26,50 @@
 #include "ops/motor_ops.h"
 #include "ops/build_stack.c"
 #include "core/motor.h"
+#define LEFT_KP 3
+#define LEFT_KI 0
+#define LEFT_KD 0
+#define LEFT_DT 20
+
+#define RIGHT_KP 3
+#define RIGHT_KI 0
+#define RIGHT_KD 0
+#define RIGHT_DT 20
+#include "ops/pid.c"
+
+
+#define VERBOSE true
+
 
 task main()
 {
 	clearDebugStream();
-	writeDebugStreamLine("raising claw fully {");
-	raiseClawFully(false);
-	writeDebugStreamLine("}");
-	writeDebugStreamLine("lower claw fully {");
-	lowerClawFully();
-	writeDebugStreamLine("}");
-	while (true) {
-		if (vexRT[Btn5U]) {
-			moveLift(100);
-		} else if (vexRT[Btn5D]) {
-			moveLift(-100);
-		} else {
-			applyStall();
+	writeDebugStreamLine("pid {");
+	//int cone_level = 1;
+	//int target = CONE_POT_HEIGHT * cone_level + CONE_POT_CONST;
+	float target = (float) SensorValue[LeftLiftPot];
+	pid *leftConfig = initPid(LEFT_KP, LEFT_KI, LEFT_KD, LEFT_DT, LeftLiftPot);
+	pid *rightConfig = initPid(RIGHT_KP, RIGHT_KI, LEFT_KD, LEFT_DT, RightLiftPot);
+	setTarget(leftConfig, target);
+	setTarget(rightConfig, target);
+	for (int i = 0; i < 10; i++) {
+		writeDebugStreamLine("	target: %f", target);
+		if (VERBOSE) writeDebugStreamLine("	pidStep leftConfig {");
+		int leftTotal = pidStep(leftConfig);
+		if (VERBOSE) {
+			writeDebugStreamLine("	}");
+			writeDebugStreamLine("	returned %i", leftTotal);
+			writeDebugStreamLine("	pidStep rightConfig {");
 		}
-
-		if (vexRT[Btn7U]) {
-			clearDebugStream();
-			for (int i = 0; i < 12; i++) {
-				writeDebugStreamLine("running build stack %d {", i);
-				buildStack(i);
-				writeDebugStreamLine("}");
-			}
+		int rightTotal = pidStep(rightConfig);
+		if (VERBOSE) {
+			writeDebugStreamLine("	}");
+			writeDebugStreamLine("	returned %i", leftTotal);
 		}
-		if (vexRT[Btn6U]) {
-			openClaw(100);
-		}
-		else if (vexRT[Btn6D]) {
-			closeClaw(100);
-		}
-		else {
-			stopClaw();
-		}
-
+		moveLeftLift(leftTotal);
+		moveRightLift(rightTotal);
+		waitPid(leftConfig);
+		waitPid(rightConfig);
 	}
+	writeDebugStreamLine("}");
 }

@@ -4,12 +4,12 @@
 bool lir = false;
 bool rir = false;
 
-pid * leftConfig;
-pid * rightConfig;
+pid *leftConfig;
+pid *rightConfig;
 
 // setConfig sets the left and right pid configuration. use initPid(kp, ki, kd, dt, sensor)
 // to create a configuration. pass the reference to config.
-void setConfig(pid * left, pid * right) {
+void setConfig(pid *left, pid *right) {
 	leftConfig = left;
 	rightConfig = right;
 }

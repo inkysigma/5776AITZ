@@ -30,8 +30,17 @@
 #include "ops/build_stack.c"
 #include "ops/liftPid.c"
 #include "ops/pid.c"
-
 #include "Vex_Competition_Includes.c"
+
+#define LEFT_KP 10
+#define LEFT_KI 0
+#define LEFT_KD 0
+#define LEFT_DT 20
+
+#define RIGHT_KP 10
+#define RIGHT_KI 0
+#define RIGHT_KD 0
+#define RIGHT_DT 20
 
 int cone_counter = 0;
 
@@ -55,7 +64,8 @@ task autonomous() {
 task usercontrol() {
 
 	// example pid configuration
-	pid* leftConfig = initPid(10, 0, 0, 20, LeftLiftPot);
+	pid *leftConfig = initPid(LEFT_KP, LEFT_KI, LEFT_KD, LEFT_DT, LeftLiftPot);
+	pid *rightConfig = initPid(RIGHT_KP, RIGHT_KI, LEFT_KD, LEFT_DT, RightLiftPot);
 
 	while (true) {
 		// drive code
@@ -64,11 +74,12 @@ task usercontrol() {
 		// lift control with 5U/D
 		if (vexRT[Btn5U]) {
 			moveLift(100);
-
 		}
+
 		else if (vexRT[Btn5D]) {
 			moveLift(-100);
 		}
+
 		else {
 			applyStall();
 		}
@@ -87,6 +98,7 @@ task usercontrol() {
 		if (vexRT[Btn7R]) {
 			openClawFully();
 		}
+
 		else if (vexRT[Btn7D]) {
 			closeClawFully();
 		}
@@ -94,9 +106,11 @@ task usercontrol() {
 		if (vexRT[Btn7L]) {
 			moveGoal(70);
 		}
+
 		else if (vexRT[Btn7U]) {
 			moveGoal(-127);
 		}
+
 		else {
 			moveGoal(0);
 		}
@@ -106,6 +120,7 @@ task usercontrol() {
 			buildStack(cone_counter);
 			cone_counter = cone_counter + 1;
 		}
+
 		else if (vexRT[Btn8D]) {
 			if (cone_counter > 0) {
 				cone_counter = cone_counter - 1;
