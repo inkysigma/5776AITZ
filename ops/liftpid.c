@@ -3,22 +3,16 @@
 
 bool lir = false;
 bool rir = false;
-int target = 0;
-
-
-pid lliftConfig;
-pid rliftConfig;
 
 pid * leftConfig;
 pid * rightConfig;
 
-
+// setConfig sets the left and right pid configuration. use initPid(kp, ki, kd, dt, sensor)
+// to create a configuration. pass the reference to config.
 void setConfig(pid * left, pid * right) {
 	leftConfig = left;
 	rightConfig = right;
 }
-
-
 
 // holdLift holds the lift at a specific position using a PID loop. This should target the right side
 task holdLeftLift() {

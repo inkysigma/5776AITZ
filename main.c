@@ -29,6 +29,7 @@
 #include "ops/motor_ops.h"
 #include "ops/build_stack.c"
 #include "ops/liftPid.c"
+#include "ops/pid.c"
 
 #include "Vex_Competition_Includes.c"
 
@@ -53,7 +54,8 @@ task autonomous() {
 
 task usercontrol() {
 
-	bool pidrunning = false;
+	// example pid configuration
+	pid* leftConfig = initPid(10, 0, 0, 20, LeftLiftPot);
 
 	while (true) {
 		// drive code

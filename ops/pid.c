@@ -27,7 +27,9 @@ struct pid
 
 pid * initPid(float kp, float ki, float kd, int dt, tSensors sensor)
 {
-	// initialize the pid to some constants
+	// initialize the pid to some constants. for tSensors sensor, pass in 
+	// an actual sensor like initPid(kp, ki, kd, dt, in1) or
+	// also initPid(kp, ki, kd, dt, LeftLiftPot)
 	// TODO: implement a method to set the max and min
 	pid config;
 	pid *ref = &config;
