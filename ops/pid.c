@@ -60,7 +60,7 @@ void setTarget(pid *config, float target)
 	config->target = target;
 }
 
-int pidStep(pid *config)
+float pidStep(pid *config)
 {
 	// calculate the value derived by a pid
 	float current_pos = SensorValue[config->sensor]
@@ -69,8 +69,6 @@ int pidStep(pid *config)
 	float derivative = error - config->prev_error;
 	config->accumulation = integral;
 
-	writeDebugStreamLine("		current position: %f", current_pos);
-	writeDebugStreamLine("		current error: %f", error);
 	// check if integral has exceeded maximum
 	if (integral > config->max_int)
 	{
@@ -80,24 +78,19 @@ int pidStep(pid *config)
 	{
 		integral = config->min_int;
 	}
-	writeDebugStreamLine("		current proportional constant: %f", config->kp);
-	float prop_res = config->kp * error;
+
 	float total = prop_res + config->ki *integral + config->kd * derivative;
-	writeDebugStreamLine("		current proportional: %f", prop_res);
-	writeDebugStreamLine("		current total: %f", total);
-	writeDebugStreamLine("		current proportional constant: %f", config->kp);
+
 	// check if the total has exceeded a certain total
 	if (total > config->max_total)
 	{
 		total = config->max_total;
-		writeDebugStreamLine("		Maximum for total reached. Setting total to %d", total);
 	}
 	else if (total < config->min_total)
 	{
 		total = config->min_total;
-		writeDebugStreamLine("		Minimum for total reached. Setting total to %d", total);
 	}
-	return (int) total;
+	return total;
 }
 
 void waitPid(pid *config) {
